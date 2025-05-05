@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine.Networking;
 using VictorDev.Async.CoroutineUtils;
@@ -39,6 +40,8 @@ namespace VictorDev.Net.WebAPI
         /// </summary>
         private static IEnumerator SendWebRequestCoroutine(WebAPI_Request request, Action<long, string> onSuccess, Action<long, string> onFailed)
         {
+            Debug.Log($"SendWebRequestCoroutine: {request.url}...");
+            Debug.Log($"[SendBodyJson]\n {JsonHelper.PrintJSONFormatting(request.BodyJSON)}...");
             void RequestErrorChecker(UnityWebRequest webRequest)
             {
                 if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
