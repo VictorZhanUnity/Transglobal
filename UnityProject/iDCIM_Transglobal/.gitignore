@@ -62,6 +62,9 @@ Garden.meta
 Oasis.meta
 Terminal.meta
 
+Skybox/
+_FontAssets/
+
 # 新增項目For Unity
 # ========== IDE 設定檔 ==========
 .vscode/
