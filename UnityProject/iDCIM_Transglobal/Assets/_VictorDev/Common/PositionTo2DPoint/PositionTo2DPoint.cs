@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace VictorDev.Common
@@ -41,7 +42,7 @@ namespace VictorDev.Common
 
         [Header(">>> 目標3D物件")] public Transform target3DObject;
         private Camera MainCamera => _mainCamera ??= Camera.main; // 指定主要攝影機
-        private Camera _mainCamera; // 指定主要攝影機
+        private Camera _mainCamera; // 指定主要攝影機 
         /// 與Main攝影機之距離
         public float DistanceFromCamera => Vector3.Distance(MainCamera.transform.position, target3DObject.position);
         private RectTransform RectTrans => _rectTrans ??= GetComponent<RectTransform>();

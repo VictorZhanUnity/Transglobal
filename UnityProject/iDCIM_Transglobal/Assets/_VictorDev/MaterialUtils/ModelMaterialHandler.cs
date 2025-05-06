@@ -1,43 +1,54 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 using VictorDev.Advanced;
+using VictorDev.Common;
+using Debug = VictorDev.Common.Debug;
 
-namespace VictorDev.Common
+namespace VictorDev.MaterialUtils
 {
     public class ModelMaterialHandler : SingletonMonoBehaviour<ModelMaterialHandler>
     {
-        [Header(">>> 指定要替換的材質")]
-        [SerializeField] private Material replaceMaterial;
+        [Header(">>> 指定要替換的材質")] [SerializeField]
+        private Material replaceMaterial;
 
-        [Header(">>> 指定要替換的物件對像")]
-        [SerializeField] private Transform targetTransform;
+        [Header(">>> 指定要替換的物件對像")] [SerializeField]
+        private Transform targetTransform;
 
-        [Space(20)]
-        [Header("[僅顯示用] 物件對像下的每個Transform物件")]
-        [SerializeField] private List<DictionaryVisualizer<Transform, Material[]>> materialDictionaryVisualize;
+        [Space(20)] [Header("[僅顯示用] 物件對像下的每個Transform物件")] [SerializeField]
+        private List<DictionaryVisualizer<Transform, Material[]>> materialDictionaryVisualize;
 
-        [Header("[僅顯示用] 排除替換之外Transfomr對像")]
-        [SerializeField] private List<Transform> excludeList;
+        [Header("[僅顯示用] 排除替換之外Transfomr對像")] [SerializeField]
+        private List<Transform> excludeList;
 
         /// 存儲每個物件及其原始材質的字典 {物件Transform, 材質陣列}
-        private Dictionary<Transform, Material[]> originalMaterials { get; set; } = new Dictionary<Transform, Material[]>();
+        private Dictionary<Transform, Material[]> originalMaterials { get; set; } =
+            new Dictionary<Transform, Material[]>();
 
         /// 根據關鍵字，針對目標物件底下所有子物件進行比對，找出名字包含關鍵字的子物件
-        public static List<Transform> FindTargetObjects(List<string> keyWords) => ObjectHelper.FindObjectsByKeywords(Instance.targetTransform, keyWords)
-            .Where(target=>target.GetComponent<MeshRenderer>() != null).ToList();
+        public static List<Transform> FindTargetObjects(List<string> keyWords)
+        {
+            Debug.Log($"FindTargetObjects... \n{string.Join(",", keyWords)}", Instance, EmojiEnum.DataBox);
+            return ObjectHelper.FindObjectsByKeywords(Instance.targetTransform, keyWords)
+                .Where(target => target.GetComponent<MeshRenderer>() != null).ToList();
+        }
 
         /// 根據關鍵字，針對目標物件底下所有子物件進行比對，找出名字包含關鍵字的子物件
-        public static List<Transform> FindTargetObjects(string keyWord) => ObjectHelper.FindObjectsByKeyword(Instance.targetTransform, keyWord);
+        public static List<Transform> FindTargetObjects(string keyWord) =>
+            ObjectHelper.FindObjectsByKeyword(Instance.targetTransform, keyWord);
 
         ///  替換當前物件及所有子物件的材質
         ///  <para>+ 用HashSet以便材質的比對</para>
         ///  <para>+ 會先自動復原全部材質</para>
-        public static void ReplaceMaterialWithExclude(HashSet<Transform> exlcudeTargets = null, Material material = null)
+        public static void ReplaceMaterialWithExclude(HashSet<Transform> exlcudeTargets = null,
+            Material material = null)
         {
             RestoreOriginalMaterials();
-            Instance.ReplaceMaterialRecursively(Instance.targetTransform, material ?? Instance.replaceMaterial, exlcudeTargets);
+            Instance.ReplaceMaterialRecursively(Instance.targetTransform, material ?? Instance.replaceMaterial,
+                exlcudeTargets);
         }
+
         public static void ReplaceMaterial(HashSet<Transform> targets = null)
         {
             RestoreOriginalMaterials();
@@ -49,7 +60,8 @@ namespace VictorDev.Common
                     if (!Instance.originalMaterials.ContainsKey(target))
                     {
                         Instance.originalMaterials[target] = renderer.sharedMaterials;
-                        Instance.materialDictionaryVisualize.Add(new DictionaryVisualizer<Transform, Material[]>(target, renderer.sharedMaterials));
+                        Instance.materialDictionaryVisualize.Add(
+                            new DictionaryVisualizer<Transform, Material[]>(target, renderer.sharedMaterials));
                     }
 
                     // 判斷是否有多個材質
@@ -84,7 +96,8 @@ namespace VictorDev.Common
 
         /// [遞迴] 替換物件及其子物件的材質
         /// <para>+ 排除的對像(選填)</para>
-        private void ReplaceMaterialRecursively(Transform objTransform, Material material, HashSet<Transform> exlcudeTargets = null)
+        private void ReplaceMaterialRecursively(Transform objTransform, Material material,
+            HashSet<Transform> exlcudeTargets = null)
         {
             if (exlcudeTargets != null)
             {
@@ -103,7 +116,8 @@ namespace VictorDev.Common
                     if (!originalMaterials.ContainsKey(objTransform))
                     {
                         originalMaterials[objTransform] = renderer.sharedMaterials;
-                        materialDictionaryVisualize.Add(new DictionaryVisualizer<Transform, Material[]>(objTransform, renderer.sharedMaterials));
+                        materialDictionaryVisualize.Add(
+                            new DictionaryVisualizer<Transform, Material[]>(objTransform, renderer.sharedMaterials));
                     }
 
                     // 判斷是否有多個材質
@@ -176,13 +190,13 @@ namespace VictorDev.Common
         /// </summary>
         public static void SetTransparentMode(Material targetMaterial)
         {
-                targetMaterial.SetFloat("_Mode", 3); // 设置模式为 Transparent
-                targetMaterial.SetOverrideTag("RenderType", "Transparent");
-                targetMaterial.EnableKeyword("_ALPHABLEND_ON");
-                targetMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                targetMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                targetMaterial.SetInt("_ZWrite", 0); // 关闭深度写入
-                targetMaterial.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent; // 设置渲染队列为透明层
+            targetMaterial.SetFloat("_Mode", 3); // 设置模式为 Transparent
+            targetMaterial.SetOverrideTag("RenderType", "Transparent");
+            targetMaterial.EnableKeyword("_ALPHABLEND_ON");
+            targetMaterial.SetInt("_SrcBlend", (int)BlendMode.SrcAlpha);
+            targetMaterial.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
+            targetMaterial.SetInt("_ZWrite", 0); // 关闭深度写入
+            targetMaterial.renderQueue = (int)RenderQueue.Transparent; // 设置渲染队列为透明层
         }
 
         /// <summary>
@@ -190,13 +204,13 @@ namespace VictorDev.Common
         /// </summary>
         public static void SetOpaqueMode(Material targetMaterial)
         {
-                targetMaterial.SetFloat("_Mode", 0); // 设置模式为 Opaque
-                targetMaterial.SetOverrideTag("RenderType", "Opaque");
-                targetMaterial.DisableKeyword("_ALPHABLEND_ON");
-                targetMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                targetMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                targetMaterial.SetInt("_ZWrite", 1); // 开启深度写入
-                targetMaterial.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry; // 设置渲染队列为几何层
+            targetMaterial.SetFloat("_Mode", 0); // 设置模式为 Opaque
+            targetMaterial.SetOverrideTag("RenderType", "Opaque");
+            targetMaterial.DisableKeyword("_ALPHABLEND_ON");
+            targetMaterial.SetInt("_SrcBlend", (int)BlendMode.One);
+            targetMaterial.SetInt("_DstBlend", (int)BlendMode.Zero);
+            targetMaterial.SetInt("_ZWrite", 1); // 开启深度写入
+            targetMaterial.renderQueue = (int)RenderQueue.Geometry; // 设置渲染队列为几何层
         }
     }
 }

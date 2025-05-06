@@ -9,8 +9,8 @@ using Debug = VictorDev.Common.Debug;
 
 public class RealtimeDataMediator : MonoBehaviour, RealtimeDataManager.IRealtimeDataReceiver
 {
-    public UnityEvent<float> currentRtAvgChanged = new UnityEvent<float>();
-    public UnityEvent<float> currentRhAvgChanged = new UnityEvent<float>();
+    public UnityEvent<string> currentRtAvgChanged = new ();
+    public UnityEvent<string> currentRhAvgChanged = new ();
     
     private List<Data_Blackbox> _realtimeData;
     
@@ -22,11 +22,11 @@ public class RealtimeDataMediator : MonoBehaviour, RealtimeDataManager.IRealtime
     }
 
     /// 計算即時溫度RT平均值
-    private void CaculateAvergeValue(string keyword, UnityEvent<float> invokeEvent = null)
+    private void CaculateAvergeValue(string keyword, UnityEvent<string> invokeEvent = null)
     {
         var filterData = _realtimeData.Where(data => data.tagName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
         float avg = filterData.Average(data=> data.value ?? 0);
-        invokeEvent?.Invoke(avg);
+        invokeEvent?.Invoke(avg.ToString());
         Debug.Log($"{keyword} Average Value: {avg}", this, EmojiEnum.Brain);
     }
 }
