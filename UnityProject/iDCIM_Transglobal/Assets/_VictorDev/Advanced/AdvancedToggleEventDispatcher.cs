@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -16,13 +15,10 @@ namespace VictorDev.Advanced
         [FormerlySerializedAs("isInvokeInAwake")] [Header(">>> Awake時自動Invoke")]
         public bool isInvokeInStart = true;
 
-        [Header(">>> Toggle值反向Invoke")]
-        public UnityEvent<bool> OnValueToReverse;
+        [Header(">>> Toggle值反向Invoke")] public UnityEvent<bool> OnValueToReverse;
 
-        [Header(">>> 當Toggle值為True時")]
-        public UnityEvent<bool> OnValueToTrue;
-        [Header(">>> 當Toggle值為False時")]
-        public UnityEvent<bool> OnValueToFalse;
+        [Header(">>> 當Toggle值為True時")] public UnityEvent<bool> OnValueToTrue;
+        [Header(">>> 當Toggle值為False時")] public UnityEvent<bool> OnValueToFalse;
         [SerializeField] private Toggle toggle;
 
         private void Awake()
@@ -30,13 +26,11 @@ namespace VictorDev.Advanced
             toggle.onValueChanged.AddListener(
                 (isOn) =>
                 {
-
                     if (isOn) OnValueToTrue?.Invoke(isOn);
                     else OnValueToFalse?.Invoke(isOn);
 
                     OnValueToReverse?.Invoke(!isOn);
                 });
-           
         }
 
         private void Start()

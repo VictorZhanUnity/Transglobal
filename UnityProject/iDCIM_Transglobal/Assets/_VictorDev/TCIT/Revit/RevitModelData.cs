@@ -13,7 +13,7 @@ namespace _VictorDEV.Revit
     public class RackModelDataExtended : RackModelData
     {
         /// 設備型號 {Brocade-7X-8-sim}
-        public string DeviceType => DevicePathSplit[6].Split(":")[0].Trim();
+        public string DeviceType =>DevicePathSplit.Length > 6? DevicePathSplit[6].Split(":")[0].Trim() : "";
 
         /// 可用U空間物件List {RackSpaceDisplayer}
         public List<RackSpaceDisplayer> AvailableUDisplayer { get; set; } = new();
@@ -110,7 +110,12 @@ namespace _VictorDEV.Revit
             {
                 string result = DeviceName.Split("+")[0].Trim();
                 int lastDashIndex = result.LastIndexOf('-'); //去除HeightU
-                return result.Substring(0, lastDashIndex);
+
+                if (result.Contains("Brocade") == false)
+                {
+                    result = result.Substring(0, lastDashIndex);
+                }
+                return result;
             }
         }
 
@@ -210,14 +215,14 @@ namespace _VictorDEV.Revit
         {
             get
             {
-                if (devicePath.Contains("RACK", StringComparison.InvariantCultureIgnoreCase) ||
-                    devicePath.Contains("ATEN", StringComparison.InvariantCultureIgnoreCase))
+                if (devicePath.Contains("DCR", StringComparison.OrdinalIgnoreCase) ||
+                    devicePath.Contains("ATEN", StringComparison.OrdinalIgnoreCase))
                     return EnumReviteModelKind.Rack;
-                if (devicePath.Contains("SERVER", StringComparison.InvariantCultureIgnoreCase))
+                if (devicePath.Contains("DCS", StringComparison.OrdinalIgnoreCase))
                     return EnumReviteModelKind.Server;
-                if (devicePath.Contains("ROUTER", StringComparison.InvariantCultureIgnoreCase))
+                if (devicePath.Contains("ROUTER", StringComparison.OrdinalIgnoreCase))
                     return EnumReviteModelKind.Router;
-                if (devicePath.Contains("SWITCH", StringComparison.InvariantCultureIgnoreCase))
+                if (devicePath.Contains("SWITCH", StringComparison.OrdinalIgnoreCase))
                     return EnumReviteModelKind.Switch;
                 return EnumReviteModelKind.Undefined;
             }
