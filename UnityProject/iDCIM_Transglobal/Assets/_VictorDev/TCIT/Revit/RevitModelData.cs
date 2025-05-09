@@ -92,7 +92,7 @@ namespace _VictorDEV.Revit
         /// U空間總使用量 (即時計算)
         public int UsageOfHeightU => Containers.Sum(device => device.information.heightU);
 
-        public float RemainOfHeightU => information.heightU - UsageOfHeightU;
+        public int RemainOfHeightU => information.heightU - UsageOfHeightU;
         public float UsagePercentOfHeightU => (float)UsageOfHeightU / information.heightU * 100f;
         public float RemainPercentOfHeightU => 100f - UsagePercentOfHeightU;
 

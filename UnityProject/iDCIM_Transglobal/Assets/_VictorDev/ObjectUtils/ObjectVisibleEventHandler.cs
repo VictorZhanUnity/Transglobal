@@ -22,7 +22,7 @@ namespace VictorDev.ObjectUtils
             get => isVisible;
         }
 
-        private void Awake() => IsOn = isVisible;
+        private void Start() => IsOn = isVisible;
 
         public void ToShow()
         {

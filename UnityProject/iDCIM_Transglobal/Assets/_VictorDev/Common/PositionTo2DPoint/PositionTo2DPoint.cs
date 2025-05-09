@@ -41,18 +41,18 @@ namespace VictorDev.Common
         private bool isCenterPivot = true;
 
         [Header(">>> 目標3D物件")] public Transform target3DObject;
-        private Camera MainCamera => _mainCamera ??= Camera.main; // 指定主要攝影機
+        // 指定主要攝影機
+        private Camera MainCamera =>_mainCamera ??= Camera.main;
+        [NonSerialized]
         private Camera _mainCamera; // 指定主要攝影機 
         /// 與Main攝影機之距離
         public float DistanceFromCamera => Vector3.Distance(MainCamera.transform.position, target3DObject.position);
         private RectTransform RectTrans => _rectTrans ??= GetComponent<RectTransform>();
+        [NonSerialized]
         private RectTransform _rectTrans; // UI 按鈕 (或任何 UI 元件)
-
-        private RectTransform CanvasRect =>
-            _canvasRect ??= GetComponentInParent<Canvas>().GetComponent<RectTransform>();
-
+        private RectTransform CanvasRect =>_canvasRect ??= GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        [NonSerialized]
         private RectTransform _canvasRect; // UI 按鈕 (或任何 UI 元件)
-
         #endregion
     }
 }

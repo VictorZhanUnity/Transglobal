@@ -88,6 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6322064905143211570}
+  - component: {fileID: 8104441813332790742}
   m_Layer: 5
   m_Name: "ProgressBar_\u96FB\u529B"
   m_TagString: Untagged
@@ -116,6 +117,68 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 240, y: 80}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &8104441813332790742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194415881640703974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 752dfee1c1b41e5458929fcca730e4e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  percentValue: 0.557
+  onImagePercentChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2150124139076794073}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onInvokeCurrentValue:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4339414532941315087}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onInvokeMaxValue:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2247296893851224227}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  currentValue: 52636
+  maxValue: 94500
+  targetImage: {fileID: 5373022604342487678}
+  dotNumber: 0
 --- !u!1 &510933060943614544
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,7 +633,7 @@ MonoBehaviour:
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0.327
+  m_FillAmount: 0.557
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1467,14 +1530,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.98039216}
+  m_Color: {r: 0.5512638, g: 0.63788885, b: 0.7169812, a: 0.9019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 02604d52223aa57418c99b60531499dc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d0d5390260fc74c4586c4ac345de1ad3, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
