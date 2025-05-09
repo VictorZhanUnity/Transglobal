@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 254bcd1da1c878549b07bd63fde02233, type: 3}
+  m_Name: "[\u767B\u5165] WebAPI_\u5E33\u5BC6\u767B\u5165 - \u53F0\u5927"
+  m_EditorClassIdentifier: 
+  method: 2
+  authorization:
+    authorizationType: 0
+    token: 
+  responseDataType: 0
+  ipConfig: {fileID: 11400000, guid: dea9e75763bc09f4a859288c39e4d2a8, type: 2}
+  apiURL: connect/token
+  queryParams:
+    isActivated: 0
+    fieldList: []
+  body:
+    isActivated: 1
+    _bodyType: 2
+    fieldList: []
+    _rawJSON: '{"grant_type":"password","username":"TCIT","password":"TCIT","scope":"auto"}'
