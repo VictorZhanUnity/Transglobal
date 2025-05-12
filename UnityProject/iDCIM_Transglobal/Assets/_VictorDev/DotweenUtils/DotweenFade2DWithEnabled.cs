@@ -1,6 +1,8 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 namespace VictorDev.DoTweenUtils
 {
@@ -24,8 +26,8 @@ namespace VictorDev.DoTweenUtils
         [SerializeField] private Transform targetTrans;
         private Vector3? originalPos { get; set; } = null;
         private Vector3? originalScale { get; set; } = null;
-        private CanvasGroup _canvasGroup { get; set; }
         public CanvasGroup canvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
+        [NonSerialized] private CanvasGroup _canvasGroup;
         #endregion
 
         [Header(">>> [Event] 當動畫結束時Invoke")]

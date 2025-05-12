@@ -50,7 +50,8 @@ public class RackFilterViewer : MonoBehaviour, DeviceDataManager.IReceiverRackMo
             _rackDataList.ForEach(rack =>
             {
                 bool isSuitable = rack.IsDeviceSuitable(_selectedDeviceData);
-                ChangeRackHeight(rack, isSuitable);
+                //ChangeRackHeight(rack, isSuitable);
+                ChangeRackHeight(rack, true);
                 ChangeRackColor(rack, isSuitable);
             });
         }
@@ -142,7 +143,7 @@ public class RackFilterViewer : MonoBehaviour, DeviceDataManager.IReceiverRackMo
         ToggleHeightU.onValueChanged.AddListener(_ => ToFilterRack());
     }
 
-    private void OnDisable()
+    private void OnDisable() 
     {
         ToggleWatt.onValueChanged.RemoveListener(_ => ToFilterRack());
         ToggleWeight.onValueChanged.RemoveListener(_ => ToFilterRack());

@@ -36,7 +36,7 @@ public class RackAndDeviceParentHandler : MonoBehaviour
         {
             if (_racks.Count == 0)
             {
-                Collider[] colliders = FindObjectsOfType<Collider>(); // 找到所有Collider
+                Collider[] colliders = FindObjectsByType<Collider>(FindObjectsSortMode.None); // 找到所有Collider
                 _racks = colliders.Where(col => rackKeywords.Any(word=> col.name.Contains(word, StringComparison.OrdinalIgnoreCase)))
                     .Select(col => col.gameObject).ToList();
             }
@@ -52,7 +52,7 @@ public class RackAndDeviceParentHandler : MonoBehaviour
         {
             if (_modelsWithNotRack.Count == 0)
             {
-                Collider[] colliders = FindObjectsOfType<Collider>(); // 找到所有Collider
+                Collider[] colliders = FindObjectsByType<Collider>(FindObjectsSortMode.None); // 找到所有Collider
                 _modelsWithNotRack = colliders.Where(col => rackKeywords.Any(word=> col.name.Contains(word, StringComparison.OrdinalIgnoreCase)) == false)
                     .Select(col => col.gameObject).ToList();
             }

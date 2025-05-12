@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using _VictorDEV.Revit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Debug = VictorDev.Common.Debug;
 
 /// 庫存設備列表
 public class StockDeviceList : MonoBehaviour, StockDeviceDataManager.IReceiverStockDeviceModelDataExtended
@@ -82,6 +82,12 @@ public class StockDeviceList : MonoBehaviour, StockDeviceDataManager.IReceiverSt
         bool isHaveSelected = ItemList.Any(item=> item.ToggleInstance.isOn);
         if (isHaveSelected) onSelectedItem?.Invoke(listItem.DeviceModelData);
         else onNoSelectedItem?.Invoke();
+
+        if (isHaveSelected)
+        {
+            Debug.Log($"devicePath: {listItem.DeviceModelData.devicePath}");
+            Debug.Log($"Model.name: {listItem.DeviceModelData.Model.name}");
+        }
     }
     
     public DeviceModelDataExtended selectedDeviceData;

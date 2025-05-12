@@ -193,10 +193,10 @@ namespace _VictorDEV.Revit
         public Transform Model
         {
             get => _model ??= Object.FindObjectsByType<Transform>(FindObjectsSortMode.None).FirstOrDefault(target =>
-                RevitHelper.GetDevicePath(target.name).Equals(devicePath, StringComparison.OrdinalIgnoreCase));
+                RevitHelper.GetDevicePath(target.name).Contains(devicePath, StringComparison.OrdinalIgnoreCase));
             set => _model = value;
         }
-
+        [NonSerialized]
         private Transform _model;
 
         /// 將DevicePath用"+" Split分開
