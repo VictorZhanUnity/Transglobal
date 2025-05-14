@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VictorDev.Common;
 
 namespace VictorDev.CameraUtils
 {
@@ -71,7 +72,8 @@ namespace VictorDev.CameraUtils
         void Update()
         {
             if (target == null) return;
-
+            if (EventHandler.IsUsingInputField) return;
+            
             HandleMovementInput();
             if (!isRotating) HandleEdgeMovement();
             if (enableZoom) HandleZoom(); // 🔄 Zoom 開關
