@@ -42,13 +42,13 @@ namespace VictorDev.DoTweenUtils
         }
 
         /// NEW===========================================================================================
-        public static Tween DoInt(TextMeshProUGUI target, int startValue, int endValue, float duration = 1f,
+        public static Tween DoInt(TextMeshProUGUI target, int startValue, int endValue, float duration = 1f, string format = "N0",
             Ease ease = Ease.OutQuad)
         {
             return DOTween.To(() => startValue, x =>
             {
                 startValue = x;
-                target.SetText(startValue.ToString());
+                target.SetText(startValue.ToString(format));
             }, endValue, duration).SetEase(ease);
         }
 

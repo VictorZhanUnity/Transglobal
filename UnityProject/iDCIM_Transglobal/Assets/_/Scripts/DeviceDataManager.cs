@@ -34,12 +34,13 @@ public class DeviceDataManager : MonoBehaviour
   
     private void InvokeEvent()
     {
-        invokeRemainOfWatt?.Invoke((int)rackModelList.Sum(data => data.RemainOfWatt));
-        invokeRemainOfWeight?.Invoke((int)rackModelList.Sum(data => data.RemainOfWeight));
-        invokeRemainOfHeightU?.Invoke(rackModelList.Sum(data => data.RemainOfHeightU));
         invokeTotalWatt?.Invoke((int)rackModelList.Sum(data => data.information.watt_limit));
         invokeTotalWeight?.Invoke((int)rackModelList.Sum(data => data.information.weight_limit));
         invokeTotalHeightU?.Invoke(rackModelList.Sum(data => data.information.heightU));
+        
+        invokeRemainOfWatt?.Invoke((int)rackModelList.Sum(data => data.RemainOfWatt));
+        invokeRemainOfWeight?.Invoke((int)rackModelList.Sum(data => data.RemainOfWeight));
+        invokeRemainOfHeightU?.Invoke(rackModelList.Sum(data => data.RemainOfHeightU));
         
         receivers.OfType<IReceiverRackModelDataExtended>().ToList().ForEach(target=> target.ReceiverData(rackModelList));
     }

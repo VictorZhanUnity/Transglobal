@@ -300,8 +300,8 @@ namespace _VictorDEV.Revit
         public float width;
         public float height;
         public int heightU;
-        public float watt;
-        public float weight;
+        public int watt;
+        public int weight;
     }
 
     #endregion

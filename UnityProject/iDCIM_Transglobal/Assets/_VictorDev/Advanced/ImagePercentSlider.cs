@@ -1,30 +1,33 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using NaughtyAttributes;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using VictorDev.ColorUtils;
+using VictorDev.DoTweenUtils;
 
 namespace VictorDev.Advanced
 {
-    [ExecuteInEditMode]
     public class ImagePercentSlider : MonoBehaviour
     {
         public void SetCurrentValue(int value)
         {
             currentValue = value;
-            InvokeEvent();
+            CaculateImagePercent();
         }
 
         public void SetMaxValue(int value)
         {
             maxValue = value;
-            InvokeEvent();
+            CaculateImagePercent();
         }
 
-        void Update() => CaculateImagePercent();
+        public void AddValue(int value) => SetCurrentValue(currentValue + value);
+
 
         private void CaculateImagePercent()
         {
@@ -34,39 +37,44 @@ namespace VictorDev.Advanced
 
             if (Mathf.Abs(targetImage.fillAmount - _percentValue) > _threshold)
             {
-                Color targetColor = colorSetting.First(level => _percentValue< level.percent01).color;
-                if (Application.isPlaying)
+                _levelColor = colorSetting.First(level => _percentValue< level.percent01).color;
+                /*if (Application.isPlaying)
                 {
-                    targetImage.DOFillAmount(_percentValue, 1f).SetEase(Ease.OutQuad);
-                    targetImage.DOColor(targetColor, 1f).SetEase(Ease.OutQuad);
+                    targetImage.DOFillAmount(_percentValue, 1f).SetEase(Ease.OutQuad).From(0);
+                    targetImage.DOColor(_levelColor, 1f).SetEase(Ease.OutQuad).From(new Color(0,0,0,0));
                 }
                 else
                 {
                     targetImage.fillAmount = _percentValue;
-                    targetImage.color = targetColor;
-                }
-                InvokeEvent();
+                    targetImage.color = _levelColor;
+                }*/
+                UpdateUI();
             }
         }
 
-        private void InvokeEvent()
+        private void UpdateUI(bool isOnEanbeld=false)
         {
-            onImagePercentChanged?.Invoke((_percentValue * 100f).ToString($"F{dotNumber}"));
-            onInvokeCurrentValue?.Invoke(currentValue.ToString("N0"));
-            onInvokeMaxValue?.Invoke(maxValue.ToString("N0"));
+            DotweenHelper.DoInt(TxtCurrentValue, isOnEanbeld? 0 : int.Parse(TxtCurrentValue.text.Replace(",", "")), currentValue);
+            DotweenHelper.DoInt(TxtPercent, isOnEanbeld? 0 : int.Parse(TxtPercent.text.Replace(",", "")), (int)(_percentValue * 100f));
+            targetImage.DOFillAmount(_percentValue, 1f).SetEase(Ease.OutQuad).From(isOnEanbeld? 0 : targetImage.fillAmount);
+            targetImage.DOColor(_levelColor, 1f).SetEase(Ease.OutQuad).From(Color.red);
         }
 
         private void Start()
         {
             targetImage ??= GetComponent<Image>();
-            InvokeEvent();
+            TxtMaxValue.SetText(maxValue.ToString("N0"));
+            UpdateUI();
         }
+
+        private void OnEnable()
+        {
+            UpdateUI(true);
+        }
+
 
         #region Variables
         [Header("[目前值]")] [SerializeField] private int currentValue;
-        public UnityEvent<string> onImagePercentChanged = new();
-        [Foldout("[其次事件]")] public UnityEvent<string> onInvokeCurrentValue = new();
-        [Foldout("[其次事件]")] public UnityEvent<string> onInvokeMaxValue = new();
         
         [Foldout("[設定]")] [SerializeField] private int maxValue = 100;
         [Foldout("[設定]")] [SerializeField] private Image targetImage;
@@ -80,7 +88,18 @@ namespace VictorDev.Advanced
         };
         private float _percentValue;
         private readonly float _threshold = 0.0001f;
+        private Color _levelColor;
+
+        private TextMeshProUGUI TxtPercent =>_txtPercent ??= transform.Find("ImgProgress/TxtPercent").GetComponent<TextMeshProUGUI>();
+        [NonSerialized]
+        private TextMeshProUGUI _txtPercent;
+        private TextMeshProUGUI TxtCurrentValue =>_txtCurrentValue ??= transform.Find("Panel/TxtValue").GetComponent<TextMeshProUGUI>();
+        [NonSerialized]
+        private TextMeshProUGUI _txtCurrentValue;
+        private TextMeshProUGUI TxtMaxValue =>_txtMaxValue ??= transform.Find("Panel/TxtMaxValue").GetComponent<TextMeshProUGUI>();
+        [NonSerialized]
+        private TextMeshProUGUI _txtMaxValue;
         #endregion
-        
+
     }
 }
