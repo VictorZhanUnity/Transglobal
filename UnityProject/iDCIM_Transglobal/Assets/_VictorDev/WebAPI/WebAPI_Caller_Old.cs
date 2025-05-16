@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine.Networking;
 using VictorDev.Async.CoroutineUtils;
@@ -12,7 +13,7 @@ namespace VictorDev.Net.WebAPI
     /// <summary>
     /// WebAPI呼叫 (以Coroutine方式呼叫)
     /// </summary>
-    public abstract class WebAPI_Caller
+    public abstract class WebAPI_Caller_Old
     {
         /// <summary>
         /// 呼叫WebAPI(用URL，預設RequestPacakge) (單一JSON資料)
@@ -34,9 +35,7 @@ namespace VictorDev.Net.WebAPI
             if (request != null) CoroutineHandler.RunCoroutine_Old(SendWebRequestCoroutine(request, onSuccess, onFailed));
             else Debug.LogWarning($"Type of WebAPI Request is Error!");
         }
-        /// <summary>
         /// 發送WebRequest
-        /// </summary>
         private static IEnumerator SendWebRequestCoroutine(WebAPI_Request request, Action<long, string> onSuccess, Action<long, string> onFailed)
         {
             Debug.Log($"SendWebRequestCoroutine: {request.url}...");
@@ -158,6 +157,7 @@ namespace VictorDev.Net.WebAPI
             }
         }
 
+
         /// <summary>
         /// 呼叫WebAPI(用URL，預設RequestPacakge) (單一JSON資料)
         /// </summary>
@@ -194,41 +194,6 @@ namespace VictorDev.Net.WebAPI
         public static IEnumerator CallWebAPI(WebAPI_Request requestPackage, Action<long, List<Dictionary<string, string>>> onSuccess, Action<long, string> onFailed = null)
              => CoroutineHandler.RunCoroutine_Old(SendRequestCoroutine(requestPackage, onSuccess, onFailed));
 
-
-        /// 呼叫WebAPI(回傳byte[])
-        public static IEnumerator CallWebAPI(WebAPI_Request requestPackage, Action<long, byte[]> onSuccess, Action<long, string> onFailed = null)
-            => CoroutineHandler.RunCoroutine_Old(SendRequestCoroutine(requestPackage, onSuccess, onFailed));
-        
-        /// ★ 發送請求 (回傳byte[])
-        private static IEnumerator SendRequestCoroutine(WebAPI_Request requestPackage, Action<long, byte[]> onSuccess, Action<long, string> onFailed)
-        {
-            switch (requestPackage.requestMethod)
-            {
-                case enumRequestMethod.GET:
-                    using (UnityWebRequest request = UnityWebRequest.Get(requestPackage.url))
-                    {
-                        // 設定Request相關資訊
-                        DownloadHandler downloadHandler = RequestSetting(requestPackage, request);
-                        // 發送請求
-                        yield return request.SendWebRequest();
-                        // 處理結果資訊
-                        ResultHandler(onSuccess, onFailed, request, downloadHandler);
-                    }
-                    break;
-                case enumRequestMethod.POST:
-                    using (UnityWebRequest request = new UnityWebRequest(requestPackage.url, "POST"))
-                    {
-                        // 設定Request相關資訊
-                        DownloadHandler downloadHandler = RequestSetting(requestPackage, request);
-                        // 發送請求
-                        yield return request.SendWebRequest();
-                        // 處理結果資訊
-                        ResultHandler(onSuccess, onFailed, request, downloadHandler);
-                    }
-                    break;
-            }
-        }
-        
         /// <summary>
         /// ★ 發送請求 (回傳：單一JSON值)
         /// </summary>
@@ -331,23 +296,6 @@ namespace VictorDev.Net.WebAPI
             request.downloadHandler = downloadHandler;
             return downloadHandler;
         }
-        
-        /// 處理結果資訊 (回傳byte[])
-        private static void ResultHandler(Action<long, byte[]> onSuccess, Action<long, string> onFailed, UnityWebRequest request, DownloadHandler downloadHandler)
-        {
-            if (request.result == UnityWebRequest.Result.ConnectionError
-                || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                //失敗
-                onFailed?.Invoke(request.responseCode, request.error);
-            }
-            else
-            {
-                //成功，回傳Dictionary<欄位名, 值>
-                onSuccess?.Invoke(request.responseCode, downloadHandler.data);
-            }
-        }
-        
         /// <summary>
         /// 處理結果資訊 (回傳：單一JSON值)
         /// </summary>

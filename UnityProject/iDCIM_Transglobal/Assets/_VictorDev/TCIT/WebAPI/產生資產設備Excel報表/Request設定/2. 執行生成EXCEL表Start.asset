@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 254bcd1da1c878549b07bd63fde02233, type: 3}
-  m_Name: "3. \u532F\u51FA\u8B80\u8868\u8A18\u9304EXCEL"
+  m_Name: "2. \u57F7\u884C\u751F\u6210EXCEL\u8868Start"
   m_EditorClassIdentifier: 
   method: 0
   authorization:
@@ -18,7 +18,7 @@ MonoBehaviour:
     token: 
   responseDataType: 0
   ipConfig: {fileID: 11400000, guid: e4abb1ac0eda0b44d81562ac06bf15b5, type: 2}
-  apiURL: /api/excelexport
+  apiURL: api/excelexport/start
   queryParams:
     isActivated: 0
     fieldList: []

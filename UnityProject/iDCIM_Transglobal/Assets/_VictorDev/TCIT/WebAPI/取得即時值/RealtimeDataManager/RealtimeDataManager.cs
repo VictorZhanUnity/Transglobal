@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
-using Unity.Android.Types;
 using UnityEngine;
 using VictorDev.Common;
 using VictorDev.TCIT.WebAPI;
