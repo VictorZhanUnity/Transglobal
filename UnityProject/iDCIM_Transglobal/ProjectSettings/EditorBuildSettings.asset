@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_/Scenes/iDCIM_Transglobal.unity
+    guid: c8409fc4d16cda64da5121ff59fde79a
+  - enabled: 1
     path: "Assets/_VictorDev/TCIT/WebAPI/\u7522\u751F\u8CC7\u7522\u8A2D\u5099Excel\u5831\u8868/\u7522\u751F\u8CC7\u7522\u8A2D\u5099Excel\u5831\u8868.unity"
     guid: 42387e0306ec66a4e8c96465ad240f05
   m_configObjects:

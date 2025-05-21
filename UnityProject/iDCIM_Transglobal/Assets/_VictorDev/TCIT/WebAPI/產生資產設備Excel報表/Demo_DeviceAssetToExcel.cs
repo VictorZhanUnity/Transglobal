@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using _VictorDEV.DateTimeUtils;
+using _VictorDEV.Revit;
 using NaughtyAttributes;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VictorDev.FileUtils;
 using VictorDev.Net.WebAPI.TCIT;
 using Debug = UnityEngine.Debug;
 
 public class Demo_DeviceAssetToExcel : MonoBehaviour
 {
-    public TMP_InputField txtFilePath;
+    [Foldout("組件控制")]
+    public TMP_InputField txtFileFolder;
+    [Foldout("組件控制")]
+    public Image image;
+    
     
     private ExcelRackRoomInfo _rackRoomInfo;
-    private string  _folder;
-    private string _filePath;
-    public Image image;
+    [Button()]
     private void BuildExcelRoomData()
     {
         _rackRoomInfo = new ExcelRackRoomInfo();
@@ -69,41 +74,45 @@ public class Demo_DeviceAssetToExcel : MonoBehaviour
             new() { RU = 2, info = "empty" },
             new() { RU = 1, info = "empty" }
         };
+        
+        ToWebAPI_ExcelPrepare();
     }
 
-    [Button("ToWebAPI_ExcelPrepare")]
-    public void ToWebAPI_ExcelPrepare()
+    [Button]
+    private void LoadResourceFile()
     {
-        BuildExcelRoomData();
-        WebApiExcelGenerator.ExcelPrepare(_rackRoomInfo, OnSuccess);
+        rackDataList.Clear();
+        ResourceFileLoader.LoadJsonFile("DeviceJsonData", OnResourceLoadSuccess);
     }
 
-    private void OnSuccess(long responseCode, byte[] excelData)
+    private void OnResourceLoadSuccess(string jsonString)
     {
-        _folder = AppDomain.CurrentDomain.BaseDirectory;
+        rackDataList = JsonConvert.DeserializeObject<List<RackModelDataExtended>>(jsonString);
+        _rackRoomInfo = new ExcelRackRoomInfo();
+        _rackRoomInfo["TransGlobal-A1"] = new List<ExcelRackRoomInfo.RackInfo>();
+        rackDataList.ForEach(rackModelData =>
+        {
+            ExcelRackRoomInfo.RackInfo rackInfo = new ExcelRackRoomInfo.RackInfo();
+            rackInfo.SetRackInfo(rackModelData);
+            _rackRoomInfo["TransGlobal-A1"].Add(rackInfo);
+        });
+        ToWebAPI_ExcelPrepare();
+    }
+    
+    public void ToWebAPI_ExcelPrepare() => WebApiExcelGenerator.ExcelPrepare(_rackRoomInfo, OnExcelPrepareSuccess);
+
+    private void OnExcelPrepareSuccess(long responseCode, byte[] excelData)
+    {
         string fileName = $"ITAssetReport-{DateTime.Today.ToString(DateTimeHelper.FullDateFormat)}.xlsx";
-        _filePath = Path.Combine(_folder, fileName);
-        File.WriteAllBytes(_filePath, excelData);
-        Debug.Log("Excel 檔案已儲存至: " + _filePath);
-
-        txtFilePath.text = _filePath;
-        try
-        {
-            // 開啟 Excel 檔案
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = _filePath,
-                UseShellExecute = true // 讓作業系統選擇合適的應用程式來開啟
-            });
-        }catch (Exception e)
-        {
-            Debug.LogError("儲存或開啟 Excel 時發生錯誤: " + e.Message);
-        }
+        txtFileFolder.text = FileHelper.DownloadHandlerFile(excelData, fileName)[0];
+        CopyFilePathToClipboard();
     }
 
-    public void CopyFilePathToClipboard()
+    private void CopyFilePathToClipboard()
     {
-        GUIUtility.systemCopyBuffer = _folder;
+        GUIUtility.systemCopyBuffer = txtFileFolder.text;
         image.gameObject.SetActive(true);
     }
+
+    public List<RackModelDataExtended> rackDataList;
 }

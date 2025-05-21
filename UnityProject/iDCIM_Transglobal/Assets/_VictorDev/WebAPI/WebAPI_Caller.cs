@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine.Networking;
 using VictorDev.Async.CoroutineUtils;
@@ -356,6 +357,7 @@ namespace VictorDev.Net.WebAPI
             if (request.result == UnityWebRequest.Result.ConnectionError
                || request.result == UnityWebRequest.Result.ProtocolError)
             {
+                onFailed ??= DefaultOnFailedHandler;
                 //失敗
                 onFailed?.Invoke(request.responseCode, request.error);
             }
@@ -364,6 +366,13 @@ namespace VictorDev.Net.WebAPI
                 //成功，回傳Dictionary<欄位名, 值>
                 onSuccess?.Invoke(request.responseCode, string.IsNullOrEmpty(downloadHandler.text)? null: JsonHelper.ParseJson(downloadHandler.text));
             }
+
+            void DefaultOnFailedHandler(long responseCode, string msg)
+            {
+                Debug.Log($"defaultOnFailedHandler[{responseCode}]: {msg}", typeof(WebAPI_Caller), EmojiEnum.Error);
+            }
+            
+            
         }
         /// <summary>
         /// 處理結果資訊 (回傳：JSON值陣列)
