@@ -12,6 +12,23 @@ namespace VictorDev.Common
     /// GameObject物件處理
     public static class ObjectHelper
     {
+        /// 刪除目標物件底下所有子物件
+        public static void RemoveAllChildInParent(Transform parent)
+        {
+            List<GameObject> objectList = parent.Cast<Transform>().Select(obj=>obj.gameObject).ToList();
+            objectList.ForEach(obj=>DestoryObject(obj));
+            objectList.Clear();
+        }
+        
+        /// 刪除目標物件
+        public static void DestoryObject(GameObject obj)
+        {
+            if(Application.isPlaying) GameObject.Destroy(obj);
+            else GameObject.DestroyImmediate(obj);
+        }
+        
+        /// ==================================================================================
+        
         /// 根據關鍵字，針對目標物件底下所有子物件進行比對，找出名字包含關鍵字的子物件
         public static List<Transform> FindObjectsByKeyword(Transform target, string keyword,
             bool isCaseSensitive = false)
