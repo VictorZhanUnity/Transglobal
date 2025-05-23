@@ -65,6 +65,8 @@ Terminal.meta
 Skybox/
 _FontAssets/
 
+/[Aa]ssets/Samples/Shader Graph/
+
 # 新增項目For Unity
 # ========== IDE 設定檔 ==========
 .vscode/

@@ -6,25 +6,34 @@ using UnityEngine;
 
 public class HeatMapSetting : MonoBehaviour
 {
-    public void SetItemPoint(Vector3 pos, int value)
+    /// 設定點位與值
+    public void SetItemPoint(HeatMapPoint targetPoint)
     {
-        value = Mathf.Clamp(value, minValue, maxValue);
-        Color color = Color.Lerp(minColor, maxColor, value * 1f / maxValue);
-        List<IHeatMapFogItem> closetItem = ObjectPlacer.ObjectList
-            .Where(t => Vector3.Distance(t.position, pos) < radiusRange)
-            .OrderBy(target => Vector3.Distance(target.position, target.transform.position)).Select(obj=>obj.GetComponent<IHeatMapFogItem>())
-            .ToList();
+        //找出在範圍內的Item
+        List<Transform> heatMapItemInRange = ObjectPlacer.ObjectList
+            .Where(target => Vector3.Distance(target.position, targetPoint.Pos) < radiusRange)
+            .OrderBy(target => Vector3.Distance(target.position, targetPoint.Pos)).ToList();
+        
+        targetPoint.HeatMapItemInRange = heatMapItemInRange;
+        
+        //算出pos與每個Item之間的Distance
+        List<float> distances = heatMapItemInRange.Select(target => Vector3.Distance(target.position, targetPoint.Pos)).ToList();
+        for (int i = 0; i < heatMapItemInRange.Count; ++i)
+        {
+            Color color = Color.Lerp(minColor, maxColor, (targetPoint.Value * 1f / maxValue) * (radiusRange-distances[i]));
+            IHeatMapFogItem targetPointItem = heatMapItemInRange[i].GetComponent<IHeatMapFogItem>();
+            if(i==0) targetPointItem.SetValue(Mathf.Clamp(targetPoint.Value, minValue, maxValue));
+            targetPointItem.SetColor(color);
+        }
 
-        IHeatMapFogItem targetPointItem = closetItem.First();
-        targetPointItem.SetValue(value);
-        targetPointItem.SetColor(color);
+        Debug.Log($"目標點位:{heatMapItemInRange[0]}");
     }
 
     [Button]
-    public void PlaceObjects() => ObjectPlacer.PlaceObjects();
+    public void InitHeatMapFog() => ObjectPlacer.PlaceObjects();
 
     [Button]
-    public void RemoveAllChildren() => ObjectPlacer.RemoveAllChildren();
+    public void RemoveHeatMapFog() => ObjectPlacer.RemoveAllChildren();
 
     public void OnObjectPlacedHandler(Transform obj)
     {
@@ -36,7 +45,7 @@ public class HeatMapSetting : MonoBehaviour
 
     #region Variables
 
-    [Header("[設定] - 影響範圍值")] [SerializeField]
+    [Header("[設定] - 點位影響範圍")] [SerializeField]
     private float radiusRange = 1;
 
     [Foldout("[設定] - 最大值、最小值與顏色")] public int minValue = 0, maxValue = 100;
@@ -47,19 +56,18 @@ public class HeatMapSetting : MonoBehaviour
     [Foldout("[設定] - 最大值、最小值與顏色")] [SerializeField]
     private Color maxColor = new Color(1, 0, 0, 150 / 255f);
 
-    #region 測試
-    [Foldout("[測試] - 點位與值")] [SerializeField]
-    private Transform testPointTarget;
-    [Foldout("[測試] - 點位與值")] [SerializeField]
-    private int testValue;
-
-    [Button]
-    private void TestPointTarget() => SetItemPoint(testPointTarget.position, testValue);
-    #endregion
    
     
     private ObjectPlacerInBound ObjectPlacer => _objectPlacerInBound ??= GetComponent<ObjectPlacerInBound>();
     [NonSerialized] private ObjectPlacerInBound _objectPlacerInBound;
 
+    #endregion
+
+    #region 測試
+    [Foldout("[測試] - 點位與值")] [SerializeField]
+    private List<HeatMapPoint> testPoints;
+
+    [Button]
+    private void TestPointTarget() => testPoints.ForEach(target=>SetItemPoint(target));
     #endregion
 }

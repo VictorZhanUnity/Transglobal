@@ -5,9 +5,10 @@ public class HeatMapFogItem_Particle : MonoBehaviour, IHeatMapFogItem
 {
     public void SetColor(Color color)
     {
-        var mainModule = ParticleSystem.main;
+        var mainModule = ParticleTarget.main;
         mainModule.startColor = color;
-        ParticleSystem.Play();
+        ParticleTarget.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+        ParticleTarget.Play();
     }
 
     public void SetValue(int value) => Value = value;
@@ -16,6 +17,6 @@ public class HeatMapFogItem_Particle : MonoBehaviour, IHeatMapFogItem
     /// 權重值
     public int Value { get; private set; }
 
-    private ParticleSystem ParticleSystem => _particleSystem ??= GetComponent<ParticleSystem>();
-    [NonSerialized] private ParticleSystem _particleSystem;
+    private ParticleSystem ParticleTarget => _particleTarget ??= GetComponent<ParticleSystem>();
+    [NonSerialized] private ParticleSystem _particleTarget;
 }

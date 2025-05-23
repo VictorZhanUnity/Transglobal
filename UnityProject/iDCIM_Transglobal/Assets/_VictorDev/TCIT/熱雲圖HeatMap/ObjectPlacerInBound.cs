@@ -33,6 +33,7 @@ public class ObjectPlacerInBound : MonoBehaviour
                     if (BoxCollider.bounds.Contains(worldPos))
                     {
                         GameObject obj = Instantiate(objectToPlace, worldPos, Quaternion.identity);
+                        obj.name += $"_{x},{y},{z}";
                         obj.transform.localScale = Vector3.one * scaleFactor;
                         obj.transform.parent = transform;
                         
