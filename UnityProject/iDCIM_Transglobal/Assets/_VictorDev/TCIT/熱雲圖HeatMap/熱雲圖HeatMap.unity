@@ -12490,7 +12490,7 @@ MonoBehaviour:
   minValue: 0
   maxValue: 100
   minColor: {r: 0, g: 1, b: 0, a: 0.039215688}
-  maxColor: {r: 1, g: 0, b: 0, a: 1}
+  maxColor: {r: 1, g: 0, b: 0, a: 0.39215687}
   testPoints:
   - {fileID: 1572209392}
   - {fileID: 1860431818}

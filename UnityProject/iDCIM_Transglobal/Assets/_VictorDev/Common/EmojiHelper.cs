@@ -72,13 +72,15 @@ public static class EmojiHelper
             EmojiEnum.Bug => "🐞",
             EmojiEnum.Star => "⭐",
 
-            _ => "❓"
+            EmojiEnum.Question => "❓"
         };
     }
 }
 public enum EmojiEnum
 {
     None,
+    
+    Question, //?
     
     // ✅ 成功 / 資訊
     Info,               // ℹ️

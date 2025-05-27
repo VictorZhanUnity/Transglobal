@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
@@ -10,15 +11,15 @@ public class ObjectPlacerInBound : MonoBehaviour
     [Button]
     public void PlaceObjects()
     {
-        if (BoxCollider == null || objectToPlace == null) return;
+        if (ObjectHelper.CheckTargetsIsNull(BoxColliderTarget, objectToPlace)) return;
 
         RemoveAllChildren();
 
         // 取得區域的大小與起點位置（世界座標）
-        Vector3 size = BoxCollider.size;
-        Vector3 center = BoxCollider.center;
-        Vector3 worldStart = BoxCollider.transform.TransformPoint(center - size * 0.5f);
-        Vector3 worldSize = Vector3.Scale(size, BoxCollider.transform.lossyScale);
+        Vector3 size = BoxColliderTarget.size;
+        Vector3 center = BoxColliderTarget.center;
+        Vector3 worldStart = BoxColliderTarget.transform.TransformPoint(center - size * 0.5f);
+        Vector3 worldSize = Vector3.Scale(size, BoxColliderTarget.transform.lossyScale);
 
         for (float x = 0; x <= worldSize.x; x += spacing.x)
         {
@@ -30,7 +31,7 @@ public class ObjectPlacerInBound : MonoBehaviour
                     Vector3 worldPos = worldStart + localPos;
 
                     // 檢查是否在 BoxCollider 的範圍內（可略過）
-                    if (BoxCollider.bounds.Contains(worldPos))
+                    if (BoxColliderTarget.bounds.Contains(worldPos))
                     {
                         GameObject obj = Instantiate(objectToPlace, worldPos, Quaternion.identity);
                         obj.name += $"_{x},{y},{z}";
@@ -62,8 +63,8 @@ public class ObjectPlacerInBound : MonoBehaviour
     
     /// 已放置的物件Item
     public List<Transform> ObjectList => transform.Cast<Transform>().ToList();
-    
-    private BoxCollider BoxCollider => _boxCollider ??= GetComponent<BoxCollider>();
-    private BoxCollider _boxCollider;
+     
+    private BoxCollider BoxColliderTarget => _boxCollider ??= GetComponent<BoxCollider>();
+    [NonSerialized] private BoxCollider _boxCollider;
     #endregion
 }

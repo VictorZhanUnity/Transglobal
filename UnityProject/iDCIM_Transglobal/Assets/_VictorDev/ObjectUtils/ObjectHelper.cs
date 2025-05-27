@@ -12,6 +12,24 @@ namespace VictorDev.Common
     /// GameObject物件處理
     public static class ObjectHelper
     {
+        /// 檢查目標物件是否為Null
+        public static bool CheckTargetsIsNull(params object[] targets)
+        {
+            bool result = false;
+            foreach (var target in targets)
+            { 
+                if (target is Object unityObj && unityObj == null)
+                {
+                    result = true;
+                }
+                else if (target == null)
+                {
+                    result = true;
+                }
+            }
+            return result;
+        }
+        
         /// 刪除目標物件底下所有子物件
         public static void RemoveAllChildInParent(Transform parent)
         {
