@@ -11,21 +11,9 @@ public class HeatMapSetting : MonoBehaviour
     {
         //找出在範圍內的Item
         List<Transform> heatMapItemInRange = ObjectPlacer.ObjectList
-            .Where(target => Vector3.Distance(target.position, targetPoint.Pos) < radiusRange)
-            .OrderBy(target => Vector3.Distance(target.position, targetPoint.Pos)).ToList();
+            .Where(target => Vector3.Distance(target.position, targetPoint.transform.position) < radiusRange).ToList();
         
-        targetPoint.HeatMapItemInRange = heatMapItemInRange;
-        
-        //算出pos與每個Item之間的Distance
-        List<float> distances = heatMapItemInRange.Select(target => Vector3.Distance(target.position, targetPoint.Pos)).ToList();
-        for (int i = 0; i < heatMapItemInRange.Count; ++i)
-        {
-            Color color = Color.Lerp(minColor, maxColor, (targetPoint.Value * 1f / maxValue) * (radiusRange-distances[i]));
-            IHeatMapFogItem targetPointItem = heatMapItemInRange[i].GetComponent<IHeatMapFogItem>();
-            if(i==0) targetPointItem.SetValue(Mathf.Clamp(targetPoint.Value, minValue, maxValue));
-            targetPointItem.SetColor(color);
-        }
-
+        targetPoint.SetHeatMapItemInRange(heatMapItemInRange);
         Debug.Log($"目標點位:{heatMapItemInRange[0]}");
     }
 
@@ -35,28 +23,43 @@ public class HeatMapSetting : MonoBehaviour
     [Button]
     public void RemoveHeatMapFog() => ObjectPlacer.RemoveAllChildren();
 
+    /// 初始化雲物件時
     public void OnObjectPlacedHandler(Transform obj)
     {
         if (obj.TryGetComponent(out IHeatMapFogItem fogItem))
         {
-            fogItem.SetColor(minColor);
+            fogItem.Initialized(this);
+            fogItem.IsShowValue = isShowValueTxt;
+
+            if (Application.isEditor)
+            {
+                _heatMapItems.Add(fogItem);
+            }
         }
     }
 
-    #region Variables
+    private void OnValidate() => _heatMapItems.ForEach(item=> item.IsShowValue = isShowValueTxt);
 
+    #region Variables
+    private readonly List<IHeatMapFogItem> _heatMapItems = new ();
+    
     [Header("[設定] - 點位影響範圍")] [SerializeField]
     private float radiusRange = 1;
-
-    [Foldout("[設定] - 最大值、最小值與顏色")] public int minValue = 0, maxValue = 100;
-
-    [Foldout("[設定] - 最大值、最小值與顏色")] [SerializeField]
+    
+    [Foldout("[設定] - 雲物件相關設定")] [SerializeField]
+    private bool isShowValueTxt;
+    [Foldout("[設定] - 雲物件相關設定")] [SerializeField]
+    private int minValue = 0, maxValue = 100;
+    [Foldout("[設定] - 雲物件相關設定")] [SerializeField]
     private Color minColor = new Color(0, 1, 0, 30 / 255f);
-
-    [Foldout("[設定] - 最大值、最小值與顏色")] [SerializeField]
+    [Foldout("[設定] - 雲物件相關設定")] [SerializeField]
     private Color maxColor = new Color(1, 0, 0, 150 / 255f);
 
-   
+    public float RadiusRange => radiusRange;
+    public int MinValue => minValue;
+    public int MaxValue => maxValue;
+    public Color MinColor => minColor;
+    public Color MaxColor => maxColor;
     
     private ObjectPlacerInBound ObjectPlacer => _objectPlacerInBound ??= GetComponent<ObjectPlacerInBound>();
     [NonSerialized] private ObjectPlacerInBound _objectPlacerInBound;
