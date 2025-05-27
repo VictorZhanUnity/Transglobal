@@ -72,7 +72,9 @@ public static class EmojiHelper
             EmojiEnum.Bug => "🐞",
             EmojiEnum.Star => "⭐",
 
-            EmojiEnum.Question => "❓"
+            EmojiEnum.Question => "❓",
+            
+            _=>""
         };
     }
 }
