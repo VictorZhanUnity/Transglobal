@@ -252,8 +252,8 @@ namespace _VictorDEV.Revit
     /// COBie資料 格式
     public abstract class CoBieData
     {
-        public float watt_limit; //總電力負荷量
-        public float weight_limit; //總重量負荷量
+        public int watt_limit; //總電力負荷量
+        public int weight_limit; //總重量負荷量
         public string component_description;
         public string component_assetIdentifier;
         public string component_serialNumber;

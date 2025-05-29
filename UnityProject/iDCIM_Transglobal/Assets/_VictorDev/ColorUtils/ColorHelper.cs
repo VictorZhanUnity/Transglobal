@@ -11,6 +11,24 @@ namespace VictorDev.ColorUtils
 {
     public class ColorHelper : SingletonMonoBehaviour<ColorHelper>
     {
+        /// 依溫度取得相對應顏色(綠→紅)
+        public static Color GetTemperatureColor(float temperature, float minValue=0, float maxValue=100)
+        => GetLevelColor(temperature, minValue, maxValue);
+        
+        /// 依濕度取得相對應顏色(黃→藍)
+        public static Color GetHumidityColor(float humidity, float minValue=0, float maxValue=100)
+            => GetLevelColor(humidity, minValue, maxValue, Color.yellow, Color.blue);
+        
+        /// 依等級取得相對應顏色
+        public static Color GetLevelColor(float value, float minValue=0, float maxValue=100, Color? minColor=null, Color? maxColor=null)
+        {
+            float t = Mathf.InverseLerp(minValue, maxValue, value);
+            return Color.Lerp(minColor ?? Color.green, minColor ?? Color.red, t);
+        }
+    
+        
+        /// OLD========================================================================
+        
         public static Color blue => ConvertRgbToColor(128, 255, 255);
         public static Color green => ConvertRgbToColor(30, 255, 30);
         public static Color yellow => ConvertRgbToColor(255, 255, 30);

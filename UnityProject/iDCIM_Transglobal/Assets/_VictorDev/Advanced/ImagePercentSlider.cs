@@ -78,7 +78,6 @@ namespace VictorDev.Advanced
         
         [Foldout("[設定]")] [SerializeField] private int maxValue = 100;
         [Foldout("[設定]")] [SerializeField] private Image targetImage;
-        [Foldout("[設定]")] [Header("小數點後幾位數")] [SerializeField] private int dotNumber = 2;
 
         [Header("[顏色等級設定]")] [SerializeField] private List<ColorHelper.ColorLevel> colorSetting = new ()
         {

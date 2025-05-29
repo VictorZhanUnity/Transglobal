@@ -15,15 +15,15 @@ namespace VictorDev.Common
         public static List<string> SplitString(string stringData, int chunkSize=500000)
         {
             List<string> chunks = new List<string>();
+            
             for (int i = 0; i < stringData.Length; i += chunkSize)
             {
                 int length = Mathf.Min(chunkSize, stringData.Length - i);
-                chunks.Add(stringData.Substring(i, length));
+                string chunkString = stringData.Substring(i, length);
+                chunks.Add(chunkString);
             }
             return chunks;
         }
-        
-        
         
         /// 設置文字大小(HTML)
         public static string SetFontSizeString(string str, int fontSize) => $"<size='{fontSize}'>{str}</size>";

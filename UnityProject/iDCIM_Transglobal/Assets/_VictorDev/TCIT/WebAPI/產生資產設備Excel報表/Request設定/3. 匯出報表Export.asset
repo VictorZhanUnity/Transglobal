@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 254bcd1da1c878549b07bd63fde02233, type: 3}
+  m_Name: "3. \u532F\u51FA\u5831\u8868Export"
+  m_EditorClassIdentifier: 
+  method: 0
+  authorization:
+    authorizationType: 0
+    token: 
+  responseDataType: 0
+  ipConfig: {fileID: 11400000, guid: e4abb1ac0eda0b44d81562ac06bf15b5, type: 2}
+  apiURL: api/excelexport
+  queryParams:
+    isActivated: 0
+    fieldList: []
+  body:
+    isActivated: 0
+    _bodyType: 2
+    fieldList: []
+    _rawJSON: 

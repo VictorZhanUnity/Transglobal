@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4068590072415344799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d69a19d29ef66464ea0afc7cd84fd6c2, type: 3}
+  m_Name: VolumetricFogRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  downsampleDepthShader: {fileID: 4800000, guid: cffeaeec0396a2c4dad475266cc8dfeb, type: 3}
+  volumetricFogShader: {fileID: 4800000, guid: 08f816187f9af0244a95556ee0cab83f, type: 3}
+  downsampleDepthMaterial: {fileID: 0}
+  volumetricFogMaterial: {fileID: 0}
 --- !u!114 &-3751262535411419207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,6 +59,29 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &-588869613814978089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 980a78cc4df543b29a2663be288cd2f5, type: 3}
+  m_Name: UniversalBlurFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  iterations: 8
+  downsample: 2
+  enableMipMaps: 1
+  scale: 1
+  offset: 1
+  scaleBlurWith: 1
+  scaleReferenceSize: 1080
+  blurType: 0
+  injectionPoint: 600
+  shader: {fileID: 4800000, guid: bb11bdc2e8aaf4c80b5315f3778d7ad4, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,9 +110,10 @@ MonoBehaviour:
   - {fileID: 7833122117494664109}
   - {fileID: 3573653513797426673}
   - {fileID: -3751262535411419207}
-  m_RendererFeatureMap: ad6b866f10d7b46cf1dd38d0ef2a9831b937925d99d6f0cb
+  - {fileID: -588869613814978089}
+  m_RendererFeatureMap: ad6b866f10d7b46cf1dd38d0ef2a9831b937925d99d6f0cbd76989c934ead3f7
   m_UseNativeRenderPass: 1
-  xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
+  xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 2
   m_OpaqueLayerMask:
@@ -92,6 +133,8 @@ MonoBehaviour:
   m_RenderingMode: 2
   m_DepthPrimingMode: 2
   m_CopyDepthMode: 0
+  m_DepthAttachmentFormat: 0
+  m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
 --- !u!114 &3573653513797426673
