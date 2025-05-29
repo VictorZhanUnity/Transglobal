@@ -16,6 +16,8 @@ namespace VictorDev.TCIT.HeatMapUtiils
             _heatMapItemInRange = targets.OrderBy(target => Vector3.Distance(target.position, transform.position))
                 .ToList();
             UpdateHeatMapItem();
+            
+            Debug.Log($"目標點位:{_heatMapItemInRange[0]}");
         }
 
         /// 設定雲物件的點位值/權重值
@@ -41,7 +43,7 @@ namespace VictorDev.TCIT.HeatMapUtiils
             => _heatMapItemInRange?.Select(target => target.GetComponent<IHeatMapFogItem>()).ToList()
                 .ForEach(target => target.SetValue(0));
 
-        private void OnValidate() => transform.GetComponentInChildren<TextMeshPro>().SetText(value.ToString());
+        private void OnValidate() => Txt.SetText(value.ToString());
 
         #region Variables
 
@@ -54,12 +56,16 @@ namespace VictorDev.TCIT.HeatMapUtiils
             set
             {
                 this.value = value;
+                OnValidate();
                 UpdateHeatMapItem(true);
             }
         }
 
         /// 在範圍內的雲物件HeatMapItem
         [NonSerialized] private List<Transform> _heatMapItemInRange = new();
+
+        private TextMeshPro Txt => _txt ??= transform.GetComponentInChildren<TextMeshPro>();
+        [NonSerialized]private TextMeshPro _txt;
 
         #endregion
     }

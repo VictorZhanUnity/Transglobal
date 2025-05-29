@@ -185,6 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7584235314530211100}
+  - component: {fileID: 5850689038489191541}
   - component: {fileID: 1861428716272485150}
   - component: {fileID: 5611939212337841007}
   - component: {fileID: 5036109607650007632}
@@ -211,6 +212,44 @@ Transform:
   - {fileID: 5153850891991810350}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &5850689038489191541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8669673464757815675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d047e5e63eab30469196c333a1bb549, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onValueChangedInt:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1861428716272485150}
+        m_TargetAssemblyTypeName: VictorDev.TCIT.HeatMapUtiils.HeatMapPoint, Assembly-CSharp
+        m_MethodName: set_Value
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onValueChangedFloat:
+    m_PersistentCalls:
+      m_Calls: []
+  onValueChangedString:
+    m_PersistentCalls:
+      m_Calls: []
+  isActivatedInStart: 1
+  intervalSec: 5
+  afterDotNumber: 2
+  minValue: 10
+  maxValue: 100
 --- !u!114 &1861428716272485150
 MonoBehaviour:
   m_ObjectHideFlags: 0

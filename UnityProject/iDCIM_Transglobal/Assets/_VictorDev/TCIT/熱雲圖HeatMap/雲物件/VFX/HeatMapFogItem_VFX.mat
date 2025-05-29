@@ -100,21 +100,21 @@ Material:
     - _Opacity: 0.05
     - _OpaqueCullMode: 2
     - _ParticleEndScale: 8
-    - _ParticleEndSize: 1.25
-    - _ParticleSpeed: 0.05
+    - _ParticleEndSize: 1
+    - _ParticleSpeed: 0
     - _ParticleSpread: 360
     - _ParticleStartScale: 5
-    - _ParticleStartSize: 0.5
+    - _ParticleStartSize: 1
     - _ParticleVelocityEnd: 0.3
     - _ParticleVelocityStart: 0.4
     - _PerPixelSorting: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _RandomizeRotationDirection: 1
+    - _RandomizeRotationDirection: 0
     - _RenderQueueType: 3
     - _Rotation: 0
-    - _RotationRandomOffset: 1
-    - _RotationSpeed: 7
+    - _RotationRandomOffset: 0
+    - _RotationSpeed: 0
     - _SoftEdges: 0
     - _SrcBlend: 5
     - _StencilRef: 0
@@ -143,14 +143,14 @@ Material:
     m_Colors:
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmitterDimensions: {r: 0.4, g: 0.4, b: 0.4, a: 0}
-    - _EndColor: {r: 0.40482342, g: 1, b: 0, a: 1}
+    - _EmitterDimensions: {r: 0, g: 0, b: 0, a: 0}
+    - _EndColor: {r: 0.004024717, g: 1, b: 0, a: 1}
     - _FlipbookDimensions: {r: 1, g: 1, b: 0, a: 0}
-    - _Gravity: {r: 0, g: 0.4, b: 0, a: 0}
+    - _Gravity: {r: 0, g: 0, b: 0, a: 0}
     - _ParticleDirection: {r: 0, g: 1, b: -0.1, a: 0}
     - _SpawnerScale: {r: 10, g: 10, b: 10, a: 0}
     - _SpawnerSize: {r: 10, g: 10, b: 10, a: 0}
-    - _StartColor: {r: 0.17243645, g: 1, b: 0, a: 1}
+    - _StartColor: {r: 0.05271268, g: 1, b: 0, a: 1}
     - _Wind: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

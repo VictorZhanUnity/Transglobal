@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
@@ -14,33 +15,38 @@ public class ObjectPlacerInBound : MonoBehaviour
         if (ObjectHelper.CheckTargetsIsNull(BoxColliderTarget, objectToPlace)) return;
 
         RemoveAllChildren();
-
-        // 取得區域的大小與起點位置（世界座標）
         Vector3 size = BoxColliderTarget.size;
         Vector3 center = BoxColliderTarget.center;
         Vector3 worldStart = BoxColliderTarget.transform.TransformPoint(center - size * 0.5f);
         Vector3 worldSize = Vector3.Scale(size, BoxColliderTarget.transform.lossyScale);
+        StartCoroutine(ToPlaceObjects());
 
-        for (float x = 0; x <= worldSize.x; x += spacing.x)
+        IEnumerator ToPlaceObjects()
         {
-            for (float y = 0; y <= worldSize.y; y += spacing.y)
+            // 取得區域的大小與起點位置（世界座標）
+            for (float x = 0; x <= worldSize.x; x += spacing.x)
             {
-                for (float z = 0; z <= worldSize.z; z += spacing.z)
+                for (float y = 0; y <= worldSize.y; y += spacing.y)
                 {
-                    Vector3 localPos = new Vector3(x, y, z);
-                    Vector3 worldPos = worldStart + localPos;
-
-                    // 檢查是否在 BoxCollider 的範圍內（可略過）
-                    if (BoxColliderTarget.bounds.Contains(worldPos))
+                    for (float z = 0; z <= worldSize.z; z += spacing.z)
                     {
-                        GameObject obj = Instantiate(objectToPlace, worldPos, Quaternion.identity);
-                        obj.name += $"_{x},{y},{z}";
-                        obj.transform.localScale = Vector3.one * scaleFactor;
-                        obj.transform.parent = transform;
+                        Vector3 localPos = new Vector3(x, y, z);
+                        Vector3 worldPos = worldStart + localPos;
+
+                        // 檢查是否在 BoxCollider 的範圍內（可略過）
+                        if (BoxColliderTarget.bounds.Contains(worldPos))
+                        {
+                            GameObject obj = Instantiate(objectToPlace, worldPos, Quaternion.identity);
+                            obj.name += $"_{x},{y},{z}";
+                            obj.transform.localScale = Vector3.one * scaleFactor;
+                            obj.transform.parent = transform;
                         
-                        onEachObjectPlaced?.Invoke(obj.transform);
+                            onEachObjectPlaced?.Invoke(obj.transform);
+                        }
                     }
                 }
+                yield return null;
+                if (Application.isPlaying == false) break;
             }
         }
     }

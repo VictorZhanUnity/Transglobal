@@ -17,7 +17,6 @@ namespace VictorDev.TCIT.HeatMapUtiils
                 .ToList();
 
             targetPoint.SetHeatMapItemInRange(heatMapItemInRange);
-            Debug.Log($"目標點位:{heatMapItemInRange[0]}");
         }
 
         [Button]
