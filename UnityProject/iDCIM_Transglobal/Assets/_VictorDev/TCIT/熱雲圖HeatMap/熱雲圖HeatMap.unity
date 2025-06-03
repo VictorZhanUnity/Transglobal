@@ -154,11 +154,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 7.671547, y: 6.234397, z: 8.279423}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &26790005
 MeshRenderer:
@@ -227,11 +227,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: 2b202ffa167b33b48bdbb8289ec53790, type: 2}
-  count: 10000
-  areaSize: {x: 20, y: 20, z: 20}
   spacing: 0.5
-  minColor: {r: 0, g: 1, b: 0, a: 0.011764706}
-  maxColor: {r: 1, g: 0, b: 0, a: 0.5882353}
+  minColor: {r: 0, g: 1, b: 0, a: 0.3}
+  maxColor: {r: 1, g: 0, b: 0, a: 0.3}
   intensity: 1
 --- !u!4 &26790008
 Transform:
