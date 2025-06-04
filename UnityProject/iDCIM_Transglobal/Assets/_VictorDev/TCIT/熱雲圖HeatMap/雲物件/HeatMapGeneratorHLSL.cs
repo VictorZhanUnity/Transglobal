@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using VictorDev.TCIT.HeatMapUtiils;
 using Debug = VictorDev.Common.Debug;
-using Random = UnityEngine.Random;
 
 namespace VictorDev.ShaderUtils
 {
@@ -11,7 +12,18 @@ namespace VictorDev.ShaderUtils
     public class HeatMapGeneratorHLSL : MonoBehaviour
     {
         [Button]
-        public void Clear() => HlslRendering.ClearMesh();
+        private void SetHeapMapPoint() => SetHeapMapPoint(heatMapSetting.TestHeatMapPoint);
+
+        public void SetHeapMapPoint(List<HeatMapPoint> heatMapPoints)
+        {
+        }
+
+        [Button]
+        public void Clear()
+        {
+            if (_coroutine != null) StopCoroutine(_coroutine);
+            HlslRendering.ClearMesh();
+        }
 
         [Button]
         public void Generate()
@@ -22,20 +34,19 @@ namespace VictorDev.ShaderUtils
             Vector3 center = BoxColliderTarget.center;
             Vector3 worldStart = BoxColliderTarget.transform.TransformPoint(center - boundSize * 0.5f);
             Vector3 worldSize = Vector3.Scale(boundSize, BoxColliderTarget.transform.lossyScale);
-            
+
             //先計算數量，以int跑迴圈會比float跑迴圈更省效能
             int countX = Mathf.FloorToInt(worldSize.x / spacing);
             int countY = Mathf.FloorToInt(worldSize.y / spacing);
             int countZ = Mathf.FloorToInt(worldSize.z / spacing);
-            
-            Debug.Log($"網格數量：{countX*countY*countZ} / {countX}:{countY}:{countZ}", this, EmojiEnum.DataBox);
+
+            Debug.Log($"產生HLSL熱雲圖...", this, EmojiEnum.Gear);
+            Debug.Log($"雲格數量：{countX * countY * countZ} / X:{countX} Y:{countY} Z:{countZ}", this, EmojiEnum.DataBox);
 
             int batchCounter = 0;
-            int batchSize = 1000; //批次處理
-            
-            if(_coroutine != null) StopCoroutine(_coroutine);
+
             _coroutine = StartCoroutine(DrawMeshCoroutine());
-            
+
             IEnumerator DrawMeshCoroutine()
             {
                 for (int xi = 0; xi <= countX; xi++)
@@ -52,7 +63,7 @@ namespace VictorDev.ShaderUtils
 
                             if (BoxColliderTarget.bounds.Contains(worldPos))
                             {
-                                Color baseColor = Color.Lerp(minColor, maxColor, 0);
+                                Color baseColor = Color.Lerp(heatMapSetting.MinColor, heatMapSetting.MaxColor, 0);
                                 HlslRendering.DrawMesh(worldPos, baseColor, emissonIntensity, meshSize);
                             }
 
@@ -65,33 +76,29 @@ namespace VictorDev.ShaderUtils
                         }
                     }
                 }
+
+                Debug.Log($"產生HLSL熱雲圖...Done!", this, EmojiEnum.Done);
             }
         }
 
-        private void OnValidate()
-        {
-            minValue = Mathf.Min(minValue, maxValue);
-            maxValue = Mathf.Max(minValue, maxValue);
-        }
-
         #region Variables
-        [Header(">>> 尺吋")]
-        [SerializeField] float meshSize = 1f;
-        [Header(">>> 間距")]
-        [SerializeField] float spacing = 0.5f; // 間隔大小（格子大小）
-        [Header(">>> 發光程度(會影響透明度)")]
-        [SerializeField] float emissonIntensity = 0f;
-        
-        [Foldout("[設定] - 最小值、最大值與顏色")]
-        [SerializeField] float minValue = 0, maxValue = 100;
-        [Foldout("[設定] - 最小值、最大值與顏色")]
-        [SerializeField] Color minColor = new Color(0, 1, 0, 1/255f), maxColor = new Color(1, 0, 0, 1/255f);
-        
+
+        [SerializeField] HeatMapSetting heatMapSetting;
+
+        [Header(">>> 尺吋")] [SerializeField] float meshSize = 1f;
+        [Header(">>> 間距")] [SerializeField] float spacing = 0.5f; // 間隔大小（格子大小）
+
+        [Header(">>> 發光程度(會影響透明度)")] [SerializeField]
+        float emissonIntensity;
+
+        [Header("運算批次處理")] [SerializeField] int batchSize = 1000;
+
         private Coroutine _coroutine;
         private HLSLRendering HlslRendering => _hlslRendering ??= GetComponent<HLSLRendering>();
         [NonSerialized] private HLSLRendering _hlslRendering;
         private BoxCollider BoxColliderTarget => _boxColliderTarget ??= GetComponent<BoxCollider>();
         [NonSerialized] private BoxCollider _boxColliderTarget;
+
         #endregion
     }
 }

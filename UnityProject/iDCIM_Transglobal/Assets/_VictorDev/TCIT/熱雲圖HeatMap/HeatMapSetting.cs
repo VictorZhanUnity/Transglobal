@@ -40,7 +40,12 @@ namespace VictorDev.TCIT.HeatMapUtiils
             }
         }
 
-        private void OnValidate() => _heatMapItems.ForEach(item => item.IsShowValue = isShowValueTxt);
+        private void OnValidate()
+        {
+            minValue = Mathf.Min(minValue, maxValue);
+            maxValue = Mathf.Max(minValue, maxValue);
+            _heatMapItems.ForEach(item => item.IsShowValue = isShowValueTxt);
+        }
 
         #region Variables
 
@@ -69,7 +74,6 @@ namespace VictorDev.TCIT.HeatMapUtiils
 
         private ObjectPlacerInBound ObjectPlacer => _objectPlacerInBound ??= GetComponent<ObjectPlacerInBound>();
         [NonSerialized] private ObjectPlacerInBound _objectPlacerInBound;
-
         #endregion
 
         #region 測試
@@ -77,8 +81,10 @@ namespace VictorDev.TCIT.HeatMapUtiils
         [Foldout("[測試] - 點位與值")] [SerializeField]
         private List<HeatMapPoint> testPoints;
 
+        public List<HeatMapPoint> TestHeatMapPoint => testPoints;
+        
         [Button]
-        private void TestPointTarget() => testPoints.ForEach(target => SetItemPoint(target));
+        private void TestPointTarget() => testPoints.ForEach(SetItemPoint);
 
         #endregion
     }

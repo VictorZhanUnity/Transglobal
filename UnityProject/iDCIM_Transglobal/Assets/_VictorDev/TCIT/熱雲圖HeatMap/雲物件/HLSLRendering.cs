@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -21,7 +22,7 @@ namespace VictorDev.ShaderUtils
             _propertyBlock.Clear();
             _matrices ??= new List<Matrix4x4>();
             _matrices.Add(Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one * (size ?? meshSize)));
-
+            
             _colors ??= new List<Vector4>();
             _colors.Add(new Vector4(color.r, color.g, color.b, color.a)); //顏色
             _glowIntensity ??= new List<float>();
@@ -30,9 +31,17 @@ namespace VictorDev.ShaderUtils
             _propertyBlock.SetVectorArray("_Color", _colors);
             _propertyBlock.SetFloatArray("_GlowIntensity", _glowIntensity);
         }
-        
+
         [Button]
-        private void DrawMesh() => DrawMesh(pos, color, emission, meshSize);
+        private void Remove()
+        {
+            _matrices.RemoveAt(1);
+            _colors.RemoveAt(1);
+            _glowIntensity.RemoveAt(1);
+        }
+
+        [Button]
+        private void DrawMesh() => DrawMesh(testPos, testColor, testEmission, meshSize);
         [Button]
         public void ClearMesh()
         {
@@ -64,12 +73,15 @@ namespace VictorDev.ShaderUtils
         private List<Matrix4x4> _matrices;
         private List<Vector4> _colors;
         private List<float> _glowIntensity;
+        
+        /// 每個Mesh點的座標
+        public List<Vector3> MeshPos => _matrices.Select(m=> m.GetPosition()).ToList();
         #endregion
 
         #region For測試
-        [Foldout("[測試]")] public Vector3 pos;
-        [Foldout("[測試]")] public Color color = new Color(0f, 1f, 0f, 0.5f);
-        [Foldout("[測試]")] public float emission = 1f;
+        [Foldout("[測試]")] public Vector3 testPos;
+        [Foldout("[測試]")] public Color testColor = new Color(0f, 1f, 0f, 0.5f);
+        [Foldout("[測試]")] public float testEmission = 1f;
         #endregion
     }
 }
