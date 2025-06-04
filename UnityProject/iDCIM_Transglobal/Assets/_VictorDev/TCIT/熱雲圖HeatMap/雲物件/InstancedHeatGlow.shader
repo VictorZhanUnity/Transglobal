@@ -35,8 +35,8 @@ Shader "Custom/InstancedHeatGlow"
             };
 
             UNITY_INSTANCING_BUFFER_START(Props)
-                UNITY_DEFINE_INSTANCED_PROP(float4, _Color) // rgba：alpha 控制透明度
-                UNITY_DEFINE_INSTANCED_PROP(float, _GlowIntensity) // 發光強度
+            UNITY_DEFINE_INSTANCED_PROP(float4, _Color) // rgba：alpha 控制透明度
+            UNITY_DEFINE_INSTANCED_PROP(float, _GlowIntensity) // 發光強度
             UNITY_INSTANCING_BUFFER_END(Props)
 
             v2f vert(appdata v)

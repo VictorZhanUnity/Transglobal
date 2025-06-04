@@ -7,12 +7,6 @@ using Random = UnityEngine.Random;
 
 public class HeatGlowInstancer : MonoBehaviour
 {
-    /*public Mesh mesh;
-    public Material material;
-    public int count = 1000;
-    public Vector3 areaSize = new Vector3(10, 10, 10);*/
-
-
     public Mesh mesh; // 小方塊 mesh
     public Material material; // 用的材質
     private BoxCollider BoxColliderTarget => _boxColliderTarget ??= GetComponent<BoxCollider>();
@@ -35,22 +29,7 @@ public class HeatGlowInstancer : MonoBehaviour
         colors = new List<Vector4>();
         glows = new List<float>();
 
-
         propertyBlock = new MaterialPropertyBlock();
-
-        // BoxColliderTargetlider 的尺寸（local space）
-        Vector3 boxSize = BoxColliderTarget.size;
-
-        /*
-        // BoxColliderTargetlider 的中心（local space）
-        Vector3 boxCenter = BoxColliderTarget.center;
-
-        // BoxColliderTargetlider 在世界座標
-        Vector3 worldPos = BoxColliderTarget.transform.position;
-        Quaternion worldRot = BoxColliderTarget.transform.rotation;
-        Vector3 worldScale = BoxColliderTarget.transform.lossyScale;
-        */
-
 
         Vector3 size = BoxColliderTarget.size;
         Vector3 center = BoxColliderTarget.center;
@@ -74,7 +53,6 @@ public class HeatGlowInstancer : MonoBehaviour
                         // 模擬熱度，隨機值決定顏色與發光強度
                         float heat = Random.value;
                         heat = 0;
-                        Debug.Log($"heat: {heat}");
                         Color baseColor = Color.Lerp(minColor, maxColor, heat);
                         float glow = Mathf.Lerp(0f, intensity, heat); // alpha 代表發光強度
 
@@ -83,29 +61,6 @@ public class HeatGlowInstancer : MonoBehaviour
                     }
                 }
             }
-
-
-            /*
-            for (int i = 0; i < count; i++)
-            {
-                Vector3 pos = new Vector3(
-                    Random.Range(-areaSize.x / 2, areaSize.x / 2),
-                    Random.Range(-areaSize.y / 2, areaSize.y / 2),
-                    Random.Range(-areaSize.z / 2, areaSize.z / 2)
-                );
-                matrices[i] = Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one * 0.2f);
-
-                // 模擬熱度，隨機值決定顏色與發光強度
-                float heat = Random.value;
-                Debug.Log($"heat: {heat}");
-                Color baseColor = Color.Lerp(minColor, maxColor, heat);
-                float glow = Mathf.Lerp(0f, intensity, heat); // alpha 代表發光強度
-
-                colors[i] = new Vector4(baseColor.r, baseColor.g, baseColor.b, baseColor.a);
-                glows[i] = glow; // glow 控制發光強度
-            }
-            */
-
             propertyBlock.SetVectorArray("_Color", colors);
             propertyBlock.SetFloatArray("_GlowIntensity", glows);
         }
