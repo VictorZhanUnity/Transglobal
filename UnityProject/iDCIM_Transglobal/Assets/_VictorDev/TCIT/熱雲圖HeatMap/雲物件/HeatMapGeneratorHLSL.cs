@@ -1,28 +1,38 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
-using VictorDev.TCIT.HeatMapUtiils;
+using VictorDev.ShaderUtils;
 using Debug = VictorDev.Common.Debug;
 
-namespace VictorDev.ShaderUtils
+namespace VictorDev.HeatMapUtiils
 {
-    [RequireComponent(typeof(BoxCollider), typeof(HLSLRendering))]
+    [RequireComponent(typeof(BoxCollider), typeof(HLSLRenderer))]
     public class HeatMapGeneratorHLSL : MonoBehaviour
     {
         [Button]
-        private void SetHeapMapPoint() => SetHeapMapPoint(heatMapSetting.TestHeatMapPoint);
+        private void SetHeapMapPoint() => heatMapSetting.TestHeatMapPoint.ForEach(SetHeapMapPoints);
 
-        public void SetHeapMapPoint(List<HeatMapPoint> heatMapPoints)
+        /// 設定點位值
+        public void SetHeapMapPoints(HeatMapPoint heatMapPoint)
         {
+            //找出在範圍內的Item，並從近到遠排列
+            List<HeatMapItemHLSL> heatMapItemInRange = _heatMapMatrixList
+                .Where(matrix => Vector3.Distance(matrix.Position, heatMapPoint.transform.position) < heatMapSetting.RadiusRange)
+                .OrderBy(matrix => Vector3.Distance(matrix.Position, heatMapPoint.transform.position))
+                .ToList();
+
+            heatMapPoint.SetHeatMapItemInRange(heatMapItemInRange);
         }
+
 
         [Button]
         public void Clear()
         {
             if (_coroutine != null) StopCoroutine(_coroutine);
-            HlslRendering.ClearMesh();
+            HlslRenderer.ClearMeshInstance();
         }
 
         [Button]
@@ -63,8 +73,14 @@ namespace VictorDev.ShaderUtils
 
                             if (BoxColliderTarget.bounds.Contains(worldPos))
                             {
-                                Color baseColor = Color.Lerp(heatMapSetting.MinColor, heatMapSetting.MaxColor, 0);
-                                HlslRendering.DrawMesh(worldPos, baseColor, emissonIntensity, meshSize);
+                                float value = 0;
+                                Color baseColor = Color.Lerp(heatMapSetting.MinColor, heatMapSetting.MaxColor, value);
+                                float emission = Mathf.Lerp(0f, emissonIntensity, value);
+                                Matrix4x4 matrix = HlslRenderer.DrawMeshInstance(worldPos, baseColor, emission, meshSize);
+
+                                HeatMapItemHLSL heatMapItemHlsl = new HeatMapItemHLSL(matrix, _hlslRenderer);
+                                heatMapItemHlsl.SetHeatMapSetting(heatMapSetting);
+                                _heatMapMatrixList.Add(heatMapItemHlsl);
                             }
 
                             // 可選：每處理 batchSize 個格子就讓出一幀
@@ -89,16 +105,19 @@ namespace VictorDev.ShaderUtils
         [Header(">>> 間距")] [SerializeField] float spacing = 0.5f; // 間隔大小（格子大小）
 
         [Header(">>> 發光程度(會影響透明度)")] [SerializeField]
-        float emissonIntensity;
+        private float emissonIntensity = 0.5f;
 
         [Header("運算批次處理")] [SerializeField] int batchSize = 1000;
 
         private Coroutine _coroutine;
-        private HLSLRendering HlslRendering => _hlslRendering ??= GetComponent<HLSLRendering>();
-        [NonSerialized] private HLSLRendering _hlslRendering;
+        private HLSLRenderer HlslRenderer => _hlslRenderer ??= GetComponent<HLSLRenderer>();
+        [NonSerialized] private HLSLRenderer _hlslRenderer;
         private BoxCollider BoxColliderTarget => _boxColliderTarget ??= GetComponent<BoxCollider>();
         [NonSerialized] private BoxCollider _boxColliderTarget;
 
+        /// 熱雲物件資訊
+        private List<HeatMapItemHLSL> _heatMapMatrixList = new();
+        
         #endregion
     }
 }

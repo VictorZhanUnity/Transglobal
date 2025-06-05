@@ -2,33 +2,21 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace VictorDev.TCIT.HeatMapUtiils
+namespace VictorDev.HeatMapUtiils
 {
-    public class HeatMapFogItem_VFX : MonoBehaviour, IHeatMapFogItem
+    public class HeatMapItemObject : MonoBehaviour, IHeatMapItem
     {
         /// 計算權重並設定顏色
         private void UpdateUI()
         {
             if (IsShowValue) TxtValue.SetText(_adjustValue.ToString("0.###"));
             float ratio = _adjustValue / _heatMapSetting.MaxValue;
-            ratio = Mathf.Clamp01(ratio);
             Color color = Color.Lerp(_heatMapSetting.MinColor, _heatMapSetting.MaxColor, ratio);
-
-            if (ratio > 0.7f) color *= 1.5f;
             SetColor(color);
-
-            float scaleValue = ratio > 0.7f ? 0.5f : 0.5f;
-
-            //RendererTarget.material.SetFloat("_Opacity", ratio);
-            RendererTarget.material.SetFloat("_Opacity", ratio*scaleValue);
         }
 
         /// 設定顏色
-        private void SetColor(Color color)
-        {
-            RendererTarget.material.SetColor("_StartColor", color);
-            RendererTarget.material.SetColor("_EndColor", color);
-        }
+        private void SetColor(Color color) => RendererTarget.material.color = color;
 
         public void SetWeightValue(int baseValue, float weightValue)
         {
@@ -37,17 +25,18 @@ namespace VictorDev.TCIT.HeatMapUtiils
             SetValue(_adjustValue);
         }
 
+        public float Value => _adjustValue;
+
         public void SetValue(float value)
         {
             _adjustValue = Mathf.Clamp(value, _heatMapSetting.MinValue, _heatMapSetting.MaxValue);
             UpdateUI();
         }
 
-        public void Initialized(HeatMapSetting heatMapSetting)
+        public void SetHeatMapSetting(HeatMapSetting heatMapSetting)
         {
             _heatMapSetting = heatMapSetting;
             SetColor(_heatMapSetting.MinColor);
-            RendererTarget.material.SetFloat("_Opacity", 0.05f);
         }
 
         #region Variables
@@ -63,12 +52,14 @@ namespace VictorDev.TCIT.HeatMapUtiils
 
         public bool IsHeatMapPoint { get; set; }
 
+
+        public Vector3 Position => transform.position;
+
         private HeatMapSetting _heatMapSetting;
+        private Renderer RendererTarget => _rendererTarget ??= GetComponent<Renderer>();
+        [NonSerialized] private Renderer _rendererTarget;
         private TextMeshPro TxtValue => _txtValue ??= transform.GetComponentInChildren<TextMeshPro>(true);
         [NonSerialized] private TextMeshPro _txtValue;
-
-        private Renderer RendererTarget => _rendererTarget ??= GetComponentInChildren<Renderer>();
-        [NonSerialized] private Renderer _rendererTarget;
 
         #endregion
     }

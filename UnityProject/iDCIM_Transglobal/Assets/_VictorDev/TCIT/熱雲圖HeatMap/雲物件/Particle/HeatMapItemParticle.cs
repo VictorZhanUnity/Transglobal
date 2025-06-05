@@ -2,9 +2,9 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace VictorDev.TCIT.HeatMapUtiils
+namespace VictorDev.HeatMapUtiils
 {
-    public class HeatMapFogItem_Object : MonoBehaviour, IHeatMapFogItem
+    public class HeatMapItemParticle : MonoBehaviour, IHeatMapItem
     {
         /// 計算權重並設定顏色
         private void UpdateUI()
@@ -14,9 +14,15 @@ namespace VictorDev.TCIT.HeatMapUtiils
             Color color = Color.Lerp(_heatMapSetting.MinColor, _heatMapSetting.MaxColor, ratio);
             SetColor(color);
         }
- 
+
         /// 設定顏色
-        private void SetColor(Color color) => RendererTarget.material.color = color;
+        private void SetColor(Color color)
+        {
+            var mainModule = ParticleTarget.main;
+            mainModule.startColor = color;
+            ParticleTarget.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+            ParticleTarget.Play();
+        }
 
         public void SetWeightValue(int baseValue, float weightValue)
         {
@@ -25,13 +31,16 @@ namespace VictorDev.TCIT.HeatMapUtiils
             SetValue(_adjustValue);
         }
 
+
         public void SetValue(float value)
         {
             _adjustValue = Mathf.Clamp(value, _heatMapSetting.MinValue, _heatMapSetting.MaxValue);
             UpdateUI();
         }
 
-        public void Initialized(HeatMapSetting heatMapSetting)
+        public Vector3 Position => transform.position;
+
+        public void SetHeatMapSetting(HeatMapSetting heatMapSetting)
         {
             _heatMapSetting = heatMapSetting;
             SetColor(_heatMapSetting.MinColor);
@@ -42,6 +51,8 @@ namespace VictorDev.TCIT.HeatMapUtiils
         /// 數值(目標點位值 or 權重值加總)
         private float _adjustValue;
 
+        public float Value => _adjustValue;
+        
         public bool IsShowValue
         {
             get => TxtValue.gameObject.activeSelf;
@@ -51,8 +62,8 @@ namespace VictorDev.TCIT.HeatMapUtiils
         public bool IsHeatMapPoint { get; set; }
 
         private HeatMapSetting _heatMapSetting;
-        private Renderer RendererTarget => _rendererTarget ??= GetComponent<Renderer>();
-        [NonSerialized] private Renderer _rendererTarget;
+        private ParticleSystem ParticleTarget => _particleTarget ??= GetComponent<ParticleSystem>();
+        [NonSerialized] private ParticleSystem _particleTarget;
         private TextMeshPro TxtValue => _txtValue ??= transform.GetComponentInChildren<TextMeshPro>(true);
         [NonSerialized] private TextMeshPro _txtValue;
 
