@@ -90,7 +90,7 @@ namespace VictorDev.HeatMapUtiils
         public List<HeatMapPoint> TestHeatMapPoint => testPoints;
         
         [Button]
-        private void SearchAllHeatMapPoint() => testPoints = FindObjectsByType<HeatMapPoint>(FindObjectsSortMode.None).ToList();
+        private void SearchAllHeatMapPoint() => testPoints = FindObjectsByType<HeatMapPoint>(FindObjectsSortMode.None).OrderBy(target=> target.name).ToList();
         #endregion
     }
 }

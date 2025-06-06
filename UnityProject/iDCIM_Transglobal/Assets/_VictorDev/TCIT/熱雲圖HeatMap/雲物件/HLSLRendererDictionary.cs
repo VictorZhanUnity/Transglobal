@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
+using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -7,7 +9,7 @@ namespace VictorDev.ShaderUtils
 {
     /// 負責繪制HLSL Graphics.DrawMeshInstance
     /// <para> + 它是繪製圖形，並非真實Instance，所以可以根據Matrix4x4[]設定的內容進行繪製多個MeshInstance</para>
-    public class HLSLRenderer : MonoBehaviour
+    public class HLSLRendererDictionary : MonoBehaviour
     {
         public bool IsActived
         {
@@ -18,53 +20,59 @@ namespace VictorDev.ShaderUtils
         private void Awake()
         {
             _propertyBlock ??= new MaterialPropertyBlock();
-            _matrices ??= new List<Matrix4x4>();
-            _colors ??= new List<Vector4>();
-            _glowIntensity ??= new List<float>();
+            _matrices ??= new();
+            _colors ??= new();
+            _glowIntensity ??= new();
         }
 
         /// 繪製MeshInstance網格
-        public Matrix4x4 DrawMeshInstance(Vector3 pos, Color color, float emissionIntensity = 0, float? size = null)
+        public MatrixInfo DrawMeshInstance(Vector3 pos, Color color, float emissionIntensity = 0, float? size = null)
         {
             Matrix4x4 matrix = Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one * (size ?? meshSize));
-            SetMeshInstanceColor(matrix, color, emissionIntensity);
-            return matrix;
+            MatrixInfo matrixInfo = new MatrixInfo(++_pointIndexCounter, matrix);
+
+            AddMeshInstanceColor(matrixInfo, color, emissionIntensity);
+            return matrixInfo;
         }
 
-        /// 設置點位顏色
-        public void ChangeMeshInstanceColor(Matrix4x4 matrix, Color color, float emissionIntensity = 0)
-        {
-            RemoveMeshInstance(matrix);
-            SetMeshInstanceColor(matrix, color, emissionIntensity);
-        }
-
-        private void SetMeshInstanceColor(Matrix4x4 matrix, Color color, float emissionIntensity = 0)
+        private void AddMeshInstanceColor(MatrixInfo matrixInfo, Color color, float emissionIntensity = 0)
         {
             _propertyBlock.Clear();
-            _matrices.Add(matrix);
+            _matrices.Add(matrixInfo.matrix);
             _colors.Add(new Vector4(color.r, color.g, color.b, color.a)); //顏色
             _glowIntensity.Add(emissionIntensity); // glow 控制發光強度
 
             _propertyBlock.SetVectorArray(PropertyBlockColor, _colors);
             _propertyBlock.SetFloatArray(PropertyBlockGlowIntensity, _glowIntensity);
         }
+        
+        /// 設置點位顏色
+        public void SetMeshInstanceColor(MatrixInfo matrixInfo, Color color, float emissionIntensity = 0)
+        {
+            if (isGenearteComplete == false) return;
+            _propertyBlock.Clear();
+            _matrices[matrixInfo.pointIndex] = matrixInfo.matrix;
+            _colors[matrixInfo.pointIndex] = new Vector4(color.r, color.g, color.b, color.a); //顏色
+            _glowIntensity[matrixInfo.pointIndex] = emissionIntensity; // glow 控制發光強度
+
+            _propertyBlock.SetVectorArray(PropertyBlockColor, _colors);
+            _propertyBlock.SetFloatArray(PropertyBlockGlowIntensity, _glowIntensity);
+        }
 
         /// 移除點位
-        private void RemoveMeshInstance(Matrix4x4 matrix)
+        private void RemoveMeshInstance(MatrixInfo matrixInfo)
         {
-            int pointIndex = _matrices.IndexOf(matrix);
-            if (pointIndex >= 0)
-            {
-                _matrices.RemoveAt(pointIndex);
-                _colors.RemoveAt(pointIndex);
-                _glowIntensity.RemoveAt(pointIndex);
-            }
+            _matrices.RemoveAt(matrixInfo.pointIndex);
+            _colors.RemoveAt(matrixInfo.pointIndex);
+            _glowIntensity.RemoveAt(matrixInfo.pointIndex);
         }
 
         /// 清除全部MeshInstance
         [Button]
         public void ClearMeshInstance()
         {
+            isGenearteComplete = false;
+            _pointIndexCounter = -1;
             _propertyBlock?.Clear();
             _matrices?.Clear();
             _colors?.Clear();
@@ -76,7 +84,8 @@ namespace VictorDev.ShaderUtils
             if (_matrices is { Count: > 0 })
             {
                 // 繪製所有實例
-                Graphics.DrawMeshInstanced(mesh, 0, material, _matrices.ToArray(), _matrices.Count, _propertyBlock,
+                Graphics.DrawMeshInstanced(mesh, 0, material, _matrices.ToArray(), _matrices.Count,
+                    _propertyBlock,
                     ShadowCastingMode.Off, false, 0, null,
                     LightProbeUsage.Off, null);
             }
@@ -96,12 +105,10 @@ namespace VictorDev.ShaderUtils
         private List<Matrix4x4> _matrices;
         private List<Vector4> _colors;
         private List<float> _glowIntensity;
-
         private string PropertyBlockColor => "_Color";
         private string PropertyBlockGlowIntensity => "_GlowIntensity";
 
-        /// 每個點位資訊的的Matrix4x4
-        public List<Matrix4x4> Matrices => _matrices;
+        private int _pointIndexCounter = -1;
 
         #endregion
 
@@ -115,8 +122,25 @@ namespace VictorDev.ShaderUtils
         private void DrawMesh() => DrawMeshInstance(testPos, testColor, testEmission, meshSize);
 
         [Button]
-        private void RemoveLast() => RemoveMeshInstance(Matrices[^1]);
+        private void RemoveLast() => RemoveMeshInstance(new MatrixInfo(_matrices.Count-1, _matrices.Last()));
 
+        public bool isGenearteComplete;
+        
         #endregion
+
+        /// MatrixInfo雲點位資訊
+        public class MatrixInfo
+        {
+            public int pointIndex;
+            public Matrix4x4 matrix;
+
+            public MatrixInfo(int pointIndex, Matrix4x4 matrix)
+            {
+                this.pointIndex = pointIndex;
+                this.matrix = matrix;
+            }
+
+            public Vector3 GetPosition() => matrix.GetPosition();
+        }
     }
 }

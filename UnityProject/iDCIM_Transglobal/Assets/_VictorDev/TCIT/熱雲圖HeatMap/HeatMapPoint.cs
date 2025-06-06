@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -20,21 +21,35 @@ namespace VictorDev.HeatMapUtiils
             Debug.Log($"目標點位:{_heatMapItemInRange[0]}");
         }
 
+        public void ClearHeatMapItemInRange() => _heatMapItemInRange?.Clear();
+
         /// 設定雲物件的點位值/權重值
         private void UpdateHeatMapItem(bool isReset = false)
         {
-            _heatMapItemInRange.ForEach(heatMapItem =>
+            if(_coroutine != null) StopCoroutine(Func());
+            _coroutine = StartCoroutine(Func());
+            return;
+
+            IEnumerator Func()
             {
-                if (isReset) heatMapItem.SetValue(0);
-                if (heatMapItem == _heatMapItemInRange.First())
+                int counter = 0;
+                foreach (var heatMapItem in _heatMapItemInRange)
                 {
-                    heatMapItem.SetValue(value); //設定值給最靠近的雲物件
-                    heatMapItem.IsHeatMapPoint = true;
+                    if (isReset) heatMapItem.SetValue(0);
+
+                    float distance = Vector3.Distance(transform.position, heatMapItem.Position);
+                    
+                    if (heatMapItem == _heatMapItemInRange.First() )
+                    {
+                        heatMapItem.SetValue(value); //設定值給最靠近的雲物件
+                        heatMapItem.IsHeatMapPoint = true;
+                    }
+                    else
+                        heatMapItem.SetWeightValue(value,distance); //以距離為權重值
+
+                    yield return new WaitForEndOfFrame();
                 }
-                else
-                    heatMapItem.SetWeightValue(value,
-                        Vector3.Distance(transform.position, heatMapItem.Position)); //以距離為權重值
-            });
+            }
         }
 
         /// 重設週圍HeatMapItem的數值為0
@@ -49,7 +64,6 @@ namespace VictorDev.HeatMapUtiils
         /// 點位值
         public int Value
         {
-            get => value;
             set
             {
                 this.value = value;
@@ -58,6 +72,8 @@ namespace VictorDev.HeatMapUtiils
             }
         }
 
+        private Coroutine _coroutine;
+        
         /// 在範圍內的雲物件HeatMapItem
         [NonSerialized] private List<HeatMapItemHLSL> _heatMapItemInRange = new();
 
