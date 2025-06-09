@@ -8,13 +8,16 @@ namespace VictorDev.HeatMapUtiils
         /// 套用熱雲圖設定
         void SetHeatMapSetting(HeatMapSetting heatMapSetting);
 
+        /// 設定所屬於哪些HeatMapPoint點位，用於計算權重
+        void SetHeatMapPoint(HeatMapPoint heatMapPoint);
+        
         /// 設定值(供目標點位使用)
         void SetValue(float value);
+
+        /// 將所屬於HeatMapPoint點位的記錄清空，並設值為0
+        void ResetPoint();
         
-        /// 設定權重值(供目標點位週圍使用)
-        void SetWeightValue(int baseValue, float weightValue);
-        
-        /// 權重值
+        /// 值
         float Value { get; }
         /// 座標
         Vector3 Position{ get; }

@@ -33,8 +33,9 @@ namespace VictorDev.HeatMapUtiils
                     targetPointItem.IsHeatMapPoint = true;
                 }
                 else
-                    targetPointItem.SetWeightValue(value,
-                        Vector3.Distance(transform.position, heatMapItem.position)); //以距離為權重值
+                {
+                   // targetPointItem.SetWeightValue(value,Vector3.Distance(transform.position, heatMapItem.position)); //以距離為權重值
+                }
             });
         }
 

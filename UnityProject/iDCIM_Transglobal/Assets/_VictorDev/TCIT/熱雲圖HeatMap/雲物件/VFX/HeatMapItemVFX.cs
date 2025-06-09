@@ -37,7 +37,17 @@ namespace VictorDev.HeatMapUtiils
             SetValue(_adjustValue);
         }
 
+        public void ResetPoint()
+        {
+            throw new NotImplementedException();
+        }
+
         public float Value => _adjustValue;
+
+        public void SetHeatMapPoint(HeatMapPoint heatMapPoint)
+        {
+            throw new NotImplementedException();
+        }
 
         public void SetValue(float value)
         {

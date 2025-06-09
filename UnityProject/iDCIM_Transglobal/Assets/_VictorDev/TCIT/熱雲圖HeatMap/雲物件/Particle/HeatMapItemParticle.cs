@@ -32,10 +32,20 @@ namespace VictorDev.HeatMapUtiils
         }
 
 
+        public void SetHeatMapPoint(HeatMapPoint heatMapPoint)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetValue(float value)
         {
             _adjustValue = Mathf.Clamp(value, _heatMapSetting.MinValue, _heatMapSetting.MaxValue);
             UpdateUI();
+        }
+
+        public void ResetPoint()
+        {
+            throw new NotImplementedException();
         }
 
         public Vector3 Position => transform.position;

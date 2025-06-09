@@ -9,12 +9,13 @@ using Debug = VictorDev.Common.Debug;
 
 namespace VictorDev.HeatMapUtiils
 {
-    [RequireComponent(typeof(BoxCollider), typeof(HLSLRendererDictionary))]
+    [RequireComponent(typeof(BoxCollider), typeof(HLSLRenderer))]
     public class HeatMapGeneratorHLSL : MonoBehaviour
     {
         [Button]
-        private void SetHeapMapPoint() => heatMapSetting.TestHeatMapPoint.ForEach(SetHeapMapPoints);
+        private void SetHeapMapPoint() => SetHeapMapPoint(heatMapSetting.TestHeatMapPoint);
 
+        public void SetHeapMapPoint(List<HeatMapPoint> heatMapPoint) => heatMapSetting.TestHeatMapPoint.ForEach(SetHeapMapPoints);
         /// 設定點位值
         public void SetHeapMapPoints(HeatMapPoint heatMapPoint)
         {
@@ -24,8 +25,7 @@ namespace VictorDev.HeatMapUtiils
                 .Where(matrix => Vector3.Distance(matrix.Position, heatMapPoint.transform.position) < heatMapSetting.RadiusRange)
                 .OrderBy(matrix => Vector3.Distance(matrix.Position, heatMapPoint.transform.position))
                 .ToList();
-
-            heatMapPoint.SetHeatMapItemInRange(heatMapItemInRange);
+            if(heatMapItemInRange.Count > 0) heatMapPoint.SetHeatMapItemInRange(heatMapItemInRange);
         }
 
         [Button]
@@ -78,7 +78,7 @@ namespace VictorDev.HeatMapUtiils
                                 float value = 0;
                                 Color baseColor = Color.Lerp(heatMapSetting.MinColor, heatMapSetting.MaxColor, value);
                                 float emission = Mathf.Lerp(0f, emissonIntensity, value);
-                                HLSLRendererDictionary.MatrixInfo matrixInfo = HlslRenderer.DrawMeshInstance(worldPos, baseColor, emission, meshSize);
+                                HLSLRenderer.MatrixInfo matrixInfo = HlslRenderer.DrawMeshInstance(worldPos, baseColor, emission, meshSize);
 
                                 HeatMapItemHLSL heatMapItemHlsl = new HeatMapItemHLSL(matrixInfo, _hlslRenderer);
                                 heatMapItemHlsl.SetHeatMapSetting(heatMapSetting);
@@ -113,8 +113,8 @@ namespace VictorDev.HeatMapUtiils
         [Header("運算批次處理")] [SerializeField] int batchSize = 1000;
 
         private Coroutine _coroutine;
-        private HLSLRendererDictionary HlslRenderer => _hlslRenderer ??= GetComponent<HLSLRendererDictionary>();
-        [NonSerialized] private HLSLRendererDictionary _hlslRenderer;
+        private HLSLRenderer HlslRenderer => _hlslRenderer ??= GetComponent<HLSLRenderer>();
+        [NonSerialized] private HLSLRenderer _hlslRenderer;
         private BoxCollider BoxColliderTarget => _boxColliderTarget ??= GetComponent<BoxCollider>();
         [NonSerialized] private BoxCollider _boxColliderTarget;
 

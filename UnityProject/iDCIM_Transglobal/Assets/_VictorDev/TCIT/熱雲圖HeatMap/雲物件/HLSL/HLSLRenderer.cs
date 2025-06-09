@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
@@ -9,7 +8,7 @@ namespace VictorDev.ShaderUtils
 {
     /// 負責繪制HLSL Graphics.DrawMeshInstance
     /// <para> + 它是繪製圖形，並非真實Instance，所以可以根據Matrix4x4[]設定的內容進行繪製多個MeshInstance</para>
-    public class HLSLRendererDictionary : MonoBehaviour
+    public class HLSLRenderer : MonoBehaviour
     {
         public bool IsActived
         {
@@ -45,7 +44,7 @@ namespace VictorDev.ShaderUtils
             _propertyBlock.SetVectorArray(PropertyBlockColor, _colors);
             _propertyBlock.SetFloatArray(PropertyBlockGlowIntensity, _glowIntensity);
         }
-        
+
         /// 設置點位顏色
         public void SetMeshInstanceColor(MatrixInfo matrixInfo, Color color, float emissionIntensity = 0)
         {
@@ -122,10 +121,10 @@ namespace VictorDev.ShaderUtils
         private void DrawMesh() => DrawMeshInstance(testPos, testColor, testEmission, meshSize);
 
         [Button]
-        private void RemoveLast() => RemoveMeshInstance(new MatrixInfo(_matrices.Count-1, _matrices.Last()));
+        private void RemoveLast() => RemoveMeshInstance(new MatrixInfo(_matrices.Count - 1, _matrices.Last()));
 
         public bool isGenearteComplete;
-        
+
         #endregion
 
         /// MatrixInfo雲點位資訊

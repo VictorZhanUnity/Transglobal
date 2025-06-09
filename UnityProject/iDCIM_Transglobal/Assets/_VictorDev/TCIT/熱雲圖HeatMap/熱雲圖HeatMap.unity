@@ -228,8 +228,19 @@ MonoBehaviour:
   mesh: {fileID: 5458571549545628968, guid: 01504795900cac148b4ebae8ccbb572a, type: 3}
   material: {fileID: 2100000, guid: 2b202ffa167b33b48bdbb8289ec53790, type: 2}
   spacing: 0.205
-  minColor: {r: 0, g: 1, b: 0, a: 0.3}
-  maxColor: {r: 1, g: 0, b: 0, a: 0.3}
+  matrices: []
+  colors: []
+  glows: []
+  minColor:
+    r: 0
+    g: 1
+    b: 0
+    a: 0.3
+  maxColor:
+    r: 1
+    g: 0
+    b: 0
+    a: 0.3
   intensity: 5
 --- !u!4 &26790008
 Transform:
@@ -278,17 +289,17 @@ MonoBehaviour:
   _scenePrefabInstances:
   - _gameObject: {fileID: 1077335258}
     _prefab: "Assets/_/Models/\u5168\u7403\u4EBA\u58FD/\u5168\u7403\u4EBA\u58FD_0506_New.fbx"
+  - _gameObject: {fileID: 1442545452}
+    _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
+  - _gameObject: {fileID: 382854829}
+    _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
   - _gameObject: {fileID: 1572209387}
     _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
   - _gameObject: {fileID: 1369153288}
     _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
   - _gameObject: {fileID: 1860431814}
     _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
-  - _gameObject: {fileID: 1442545452}
-    _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
   - _gameObject: {fileID: 415736881}
-    _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
-  - _gameObject: {fileID: 382854829}
     _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
   - _gameObject: {fileID: 1923078252}
     _prefab: "Assets/_VictorDev/TCIT/\u71B1\u96F2\u5716HeatMap/\u9EDE\u4F4D.prefab"
@@ -580,7 +591,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1861428716272485150, guid: 173172995a6d6e241aba3c9eaf960ecb, type: 3}
       propertyPath: value
-      value: 74
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 3796075281339827034, guid: 173172995a6d6e241aba3c9eaf960ecb, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1429,12 +1440,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1442545453}
+  - {fileID: 382854830}
   - {fileID: 1572209391}
   - {fileID: 1369153287}
   - {fileID: 1860431815}
-  - {fileID: 1442545453}
   - {fileID: 415736880}
-  - {fileID: 382854830}
   - {fileID: 1923078253}
   - {fileID: 509447203}
   - {fileID: 1766249497}
@@ -2792,15 +2803,15 @@ MonoBehaviour:
   maxColor: {r: 1, g: 0, b: 0, a: 0.039215688}
   maxEmissionIntensity: 0.5
   testPoints:
-  - {fileID: 1442545456}
-  - {fileID: 1923078256}
-  - {fileID: 1860431818}
-  - {fileID: 382854833}
-  - {fileID: 1896430388}
-  - {fileID: 1369153291}
-  - {fileID: 1766249501}
   - {fileID: 1572209392}
+  - {fileID: 1442545456}
+  - {fileID: 1860431818}
+  - {fileID: 1923078256}
+  - {fileID: 1369153291}
+  - {fileID: 382854833}
+  - {fileID: 1766249501}
   - {fileID: 509447205}
+  - {fileID: 1896430388}
   - {fileID: 415736882}
 --- !u!1 &773956141
 GameObject:
@@ -13224,7 +13235,6 @@ GameObject:
   - component: {fileID: 1097533874}
   - component: {fileID: 1097533873}
   - component: {fileID: 1097533872}
-  - component: {fileID: 1097533875}
   - component: {fileID: 1097533876}
   m_Layer: 0
   m_Name: HeatMapGeneratorHLSL
@@ -13287,24 +13297,6 @@ Transform:
   - {fileID: 754817872}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1097533875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1097533871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a554fbb84758a4ca357d219d38f6c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  meshSize: 1
-  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: 2b202ffa167b33b48bdbb8289ec53790, type: 2}
-  testPos: {x: 0, y: 0, z: 0}
-  testColor: {r: 0, g: 1, b: 0, a: 0.5}
-  testEmission: 1
 --- !u!114 &1097533876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13356,8 +13348,15 @@ MonoBehaviour:
   meshSize: 1
   mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: 2b202ffa167b33b48bdbb8289ec53790, type: 2}
+  _matrices: []
+  _colors: []
+  _glowIntensity: []
   testPos: {x: 0, y: 0, z: 0}
-  testColor: {r: 0, g: 1, b: 0, a: 0.5}
+  testColor:
+    r: 0
+    g: 1
+    b: 0
+    a: 0.5
   testEmission: 1
 --- !u!4 &1107211353
 Transform:
@@ -17206,7 +17205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6988724794045465836, guid: 173172995a6d6e241aba3c9eaf960ecb, type: 3}
       propertyPath: m_text
-      value: 67
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7584235314530211100, guid: 173172995a6d6e241aba3c9eaf960ecb, type: 3}
       propertyPath: m_LocalPosition.x
